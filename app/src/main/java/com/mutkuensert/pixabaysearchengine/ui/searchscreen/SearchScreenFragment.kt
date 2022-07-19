@@ -1,4 +1,4 @@
-package com.mutkuensert.pixabaysearchengine
+package com.mutkuensert.pixabaysearchengine.ui.searchscreen
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
