@@ -43,7 +43,7 @@ class SearchScreenFragment : Fragment() {
 
         val imageAndVideo = arrayOf("image","video")
 
-        ArrayAdapter(context!!, R.layout.custom_spinner_item, imageAndVideo).also {
+        ArrayAdapter(context!!, android.R.layout.simple_spinner_item, imageAndVideo).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.imageOrVideoSpinner.adapter = it
         }
@@ -74,7 +74,7 @@ class SearchScreenFragment : Fragment() {
             types = videoTypes
         }
 
-        ArrayAdapter(context!!, R.layout.custom_spinner_item, types).also {
+        ArrayAdapter(context!!, android.R.layout.simple_spinner_item, types).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.imageOrVideoTypeSpinner.adapter = it
         }

@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/ic_launcher_background"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:contentDescription="A random screen background picture from Pixabay" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,14 +44,14 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:elevation="25dp"
+                android:elevation="40dp"
                 app:cardUseCompatPadding="true">
-                <!-- app:cardUseCompatPadding="true" solved the unseen shadow while
-                using custom_spinner_item in ArrayAdapter instead of simple_spinner_item implementation of fragment's class.
-                Source: https://stackoverflow.com/questions/43406938/cardview-not-showing-shadow-elevation/43407250#43407250-->
+                <!-- app:cardUseCompatPadding="true" solves the unseen shadow issue because
+                somehow the linear layout that wrappes these cardviews doesn't detect
+                shadows. Thus the layout cuts the vertical shadows while wrapping cardviews
+                without using cardUseCompatPadding.(So the message in this section on previous commit is wrong.)-->
 
                 <Spinner
-                    android:background="@drawable/custom_spinner"
                     android:id="@+id/imageOrVideoSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -59,13 +60,11 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:elevation="25dp"
+                android:elevation="40dp"
                 android:layout_marginStart="20dp"
                 app:cardUseCompatPadding="true">
 
                 <Spinner
-                    app:cardUseCompatPadding="true"
-                    style="@style/CustomSpinner"
                     android:id="@+id/imageOrVideoTypeSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
