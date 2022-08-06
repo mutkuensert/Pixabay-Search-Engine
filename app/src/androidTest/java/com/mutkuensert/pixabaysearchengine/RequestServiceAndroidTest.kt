@@ -1,7 +1,6 @@
 package com.mutkuensert.pixabaysearchengine
 
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mutkuensert.pixabaysearchengine.data.ImagesModel
 import com.mutkuensert.pixabaysearchengine.data.RequestService
 import dagger.hilt.EntryPoint
@@ -14,29 +13,22 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import retrofit2.Response
+import javax.inject.Inject
 
-@RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
 class RequestServiceAndroidTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
-    private lateinit var requestService: RequestService
+    @Inject
+    lateinit var requestService: RequestService
     private lateinit var response: Response<ImagesModel>
-
-    @InstallIn(SingletonComponent::class)
-    @EntryPoint
-    interface RequestServiceAndroidTestEntryPoint{
-        fun provideRequestService(): RequestService
-    }
 
     @Before
     fun initRequestService(){
-        val hiltEntryPoint = EntryPointAccessors.fromApplication(ApplicationProvider.getApplicationContext(), RequestServiceAndroidTestEntryPoint::class.java)
-        requestService = hiltEntryPoint.provideRequestService()
+        hiltRule.inject()
     }
 
     @Before
