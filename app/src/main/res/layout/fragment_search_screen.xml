@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.searchscreen.SearchScreenFragment"
-    android:fitsSystemWindows="true">
+    tools:context=".ui.searchscreen.SearchScreenFragment">
 
     <ImageView
         android:id="@+id/backgroundImage"
+        android:src="@drawable/ic_launcher_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
@@ -17,7 +17,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/wholeLayoutExceptImageView">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,6 +57,10 @@
                         android:layout_height="wrap_content"
                         android:hint="Search..."
                         android:layout_marginHorizontal="20dp"
+                        app:endIconMode="custom"
+                        app:endIconDrawable="@drawable/ic_search"
+                        app:endIconContentDescription="Search button"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         app:boxBackgroundColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -106,6 +111,7 @@
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/ownerIdTextCardView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cardCornerRadius="15dp"
