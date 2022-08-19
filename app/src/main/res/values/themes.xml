@@ -13,9 +13,12 @@
         <item name="android:statusBarColor" >@android:color/transparent</item>
         <!-- Customize your theme here. -->
 
-        <!-- Source: https://stackoverflow.com/questions/29311078/android-completely-transparent-status-bar -->
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">
+            @android:color/transparent
+        </item>
+        <item name="android:windowLightStatusBar">
+            true
+        </item>
     </style>
 
 </resources>
