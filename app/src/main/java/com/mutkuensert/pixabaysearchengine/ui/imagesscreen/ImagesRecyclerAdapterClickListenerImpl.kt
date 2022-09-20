@@ -3,7 +3,6 @@ package com.mutkuensert.pixabaysearchengine.ui.imagesscreen
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import com.mutkuensert.pixabaysearchengine.data.ImageHitsModel
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.InputStream
@@ -11,9 +10,9 @@ import java.io.InputStream
 private const val TAG = "ImagesRecyclerAdapterClickListenerImpl"
 open class ImagesRecyclerAdapterClickListenerImpl(private val application: Application): ImagesRecyclerAdapterClickListener {
 
-    override fun onClick(hitItem: ImageHitsModel) {
+    override fun downloadUrlOnClick(url: String) {
         val request = Request.Builder()
-            .url("https://cdn.pixabay.com/photo/2014/06/03/19/38/test-361512_960_720.jpg")
+            .url(url)
             .build()
         val client = OkHttpClient()
 

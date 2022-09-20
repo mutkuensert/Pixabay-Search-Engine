@@ -3,8 +3,10 @@ package com.mutkuensert.pixabaysearchengine.ui.imagesscreen
 import android.content.Context
 import android.util.Log
 import androidx.test.core.app.ApplicationProvider
+import com.mutkuensert.pixabaysearchengine.data.ImageHitsModel
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -13,14 +15,20 @@ import java.io.InputStream
 
 private const val TAG = "ImagesRecyclerAdapterClickListenerImpl"
 class ImagesRecyclerAdapterClickListenerImplTestVersion: ImagesRecyclerAdapterClickListenerImpl(ApplicationProvider.getApplicationContext()) {
-    fun onClick(): Boolean {
+    lateinit var responseWillBeCheckedInTest: Response
+    override fun downloadUrlOnClick(url: String) {
         val request = Request.Builder()
-            .url("https://raw.githubusercontent.com/mutkuensert/Files/main/test_image.jpg")
+            .url(url)
             .build()
         val client = OkHttpClient()
 
-        client.newCall(request).execute().use { response ->
-            return response.isSuccessful
+        client.newCall(request).execute().use {
+            responseWillBeCheckedInTest = it
+            if(it.isSuccessful){
+                writeToFile(ApplicationProvider.getApplicationContext(), it.body!!.byteStream())
+            }else{
+                Log.e(TAG, "The response is not successful.")
+            }
         }
     }
 
