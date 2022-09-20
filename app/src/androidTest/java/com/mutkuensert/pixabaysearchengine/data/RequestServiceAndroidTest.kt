@@ -1,14 +1,8 @@
-package com.mutkuensert.pixabaysearchengine
+package com.mutkuensert.pixabaysearchengine.data
 
-import androidx.test.core.app.ApplicationProvider
-import com.mutkuensert.pixabaysearchengine.data.ImagesModel
-import com.mutkuensert.pixabaysearchengine.data.RequestService
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
+import com.mutkuensert.pixabaysearchengine.data.source.RequestService
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -37,17 +31,9 @@ class RequestServiceAndroidTest {
     }
 
     @Test
-    fun errorBodyIsNull(){
+    fun errorBodyIsNull_responseBodyIsNotNull_httpCodeIs200(){
         assert(response.errorBody() == null)
-    }
-
-    @Test
-    fun responseBodyIsNotNull(){
         assert(response.body() != null)
-    }
-
-    @Test
-    fun httpCodeIs200(){
         assert(response.code() == 200)
     }
 

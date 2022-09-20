@@ -1,5 +1,6 @@
-package com.mutkuensert.pixabaysearchengine.data
+package com.mutkuensert.pixabaysearchengine.data.source
 
+import com.mutkuensert.pixabaysearchengine.data.ImagesModel
 import com.mutkuensert.pixabaysearchengine.util.BASE_URL
 import com.mutkuensert.pixabaysearcher.util.API_KEY
 import retrofit2.Response

@@ -1,6 +1,6 @@
 package com.mutkuensert.pixabaysearchengine.di
 
-import com.mutkuensert.pixabaysearchengine.data.RequestService
+import com.mutkuensert.pixabaysearchengine.data.source.RequestService
 import com.mutkuensert.pixabaysearchengine.util.BASE_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -18,7 +18,7 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun providesRequestService(): RequestService{
+    fun providesRequestService(): RequestService {
         val moshi = Moshi
             .Builder()
             .add(KotlinJsonAdapterFactory())

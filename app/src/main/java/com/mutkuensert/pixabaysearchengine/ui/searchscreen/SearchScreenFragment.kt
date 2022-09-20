@@ -16,8 +16,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.view.*
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import coil.load
+import com.bumptech.glide.Glide
+import com.mutkuensert.pixabaysearchengine.data.ImageRequestModel
 import com.mutkuensert.pixabaysearchengine.databinding.FragmentSearchScreenBinding
 import com.mutkuensert.pixabaysearchengine.util.Status
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,25 +33,20 @@ class SearchScreenFragment : Fragment() {
     private var _binding: FragmentSearchScreenBinding? = null
     private val binding get() = _binding!!
     private val viewModel: SearchScreenFragmentViewModel by viewModels()
-    private val selectedSearchOptions = mutableMapOf("imageOrVideo" to "image", "imageOrVideoType" to "all")
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
-    }
+    private var imageOrVideoSelection: String = "image"
+    private var imageRequestModel = ImageRequestModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSearchScreenBinding.inflate(inflater, container, false)
-        setDecorToFitSystemWindow()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setSpinners()
+        setImageOrVidepSpinner()
         setObserversAndClickListeners()
         //viewModel.requestSearchScreenBackgroundImage()
     }
@@ -83,9 +81,7 @@ class SearchScreenFragment : Fragment() {
                     }.also { setImageDrawable(it) }
 
                     Status.SUCCESS -> {
-                        load(resource.data?.largeImageURL){
-                            crossfade(true)
-                        }
+                        Glide.with(this).load(resource.data?.largeImageURL).into(this)
                         val ownerText = "Owner: ${resource.data?.user}"
                         updateOwnerIdTextViewWithAnimation(ownerText)
                     }
@@ -99,12 +95,17 @@ class SearchScreenFragment : Fragment() {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://pixabay.com/")),null)
         }
 
+        //This is search icon button.
         binding.searchEditText.setEndIconOnClickListener {
-            Log.d(TAG, "Search button has been clicked.")
+            //TODO("Put the right (image or video)requestModel as parameter.")
+            imageRequestModel.search = binding.searchEditText.editText!!.text.toString()
+            SearchScreenFragmentDirections.actionSearchScreenFragmentToImagesScreenFragment(imageRequestModel).also {
+                findNavController().navigate(it)
+            }
         }
     }
 
-    private fun setSpinners(){
+    private fun setImageOrVidepSpinner(){
 
         val imageAndVideo = arrayOf("image","video") //These are shouldn't be changed due to lower case restriction in the api.
 
@@ -117,12 +118,15 @@ class SearchScreenFragment : Fragment() {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 p0!!.getItemAtPosition(p2).also { item ->
                     setImageOrVideoTypeSpinnerContents(item as String)
-                    selectedSearchOptions["imageOrVideo"] = item as String
+                    imageOrVideoSelection = item as String
+
+                    if(item == "video") imageRequestModel = ImageRequestModel() //It's being set to default.
+                    //TODO("If item ='image', videoRequestModel should be set to default.")
                 }
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                selectedSearchOptions["imageOrVideo"] = "image"
+                imageOrVideoSelection = "image"
             }
         }
     }
@@ -146,12 +150,16 @@ class SearchScreenFragment : Fragment() {
         binding.imageOrVideoTypeSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 p0!!.getItemAtPosition(p2).also { item ->
-                    selectedSearchOptions["imageOrVideoType"] = item as String
+
+                    if(type == "image") imageRequestModel.imageType = item as String
+
+                    //if(type == "video") TODO("Video type in videoRequestModel should be changed.")
                 }
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                selectedSearchOptions["imageOrVideoType"] = "all"
+                if(type == "image") imageRequestModel.imageType = "all"
+                //TODO("If it's video, set type in videoRequestModel to all, otherwise do the opposite")
             }
         }
     }
@@ -161,7 +169,7 @@ class SearchScreenFragment : Fragment() {
             .alpha(0f)
             .setDuration(1000L)
             .setListener(object: AnimatorListenerAdapter(){
-                override fun onAnimationEnd(animation: Animator?) {
+                override fun onAnimationEnd(animation: Animator) {
                     binding.ownerIdTextView.text = text
                     makeOwnerIdTextCardViewVisibleAgainWithAnimation()
                 }
