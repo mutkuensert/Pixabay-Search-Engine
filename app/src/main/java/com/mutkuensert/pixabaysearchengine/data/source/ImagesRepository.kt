@@ -65,10 +65,5 @@ open class ImagesRepository @Inject constructor (
 
         //ELSE
         return Resource.error("Error.", null)
-
     }
-
-//    open fun downloadFile(url: String, type: String){
-//        val mimeType = if(type == "video") "video/*" else "image/*"
-//    }
 }

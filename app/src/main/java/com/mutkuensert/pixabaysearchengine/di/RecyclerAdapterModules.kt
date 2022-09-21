@@ -1,6 +1,5 @@
 package com.mutkuensert.pixabaysearchengine.di
 
-import android.app.Application
 import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapter
 import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapterClickListener
 import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapterClickListenerImpl
@@ -16,8 +15,8 @@ object RecyclerAdapterModules {
 
     @Singleton
     @Provides
-    fun providesImagesRecyclerAdapterClickListener(app: Application): ImagesRecyclerAdapterClickListener{
-        return ImagesRecyclerAdapterClickListenerImpl(app)
+    fun providesImagesRecyclerAdapterClickListener(): ImagesRecyclerAdapterClickListener{
+        return ImagesRecyclerAdapterClickListenerImpl()
     }
 
     @Singleton

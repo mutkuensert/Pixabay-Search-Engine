@@ -3,6 +3,7 @@ package com.mutkuensert.pixabaysearchengine.di
 import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.FakeImagesRecyclerAdapter
 import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapterClickListenerImplTestVersion
 import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapter
+import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapterClickListener
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -18,13 +19,13 @@ object FakeRecyclerAdapterModules {
 
     @Singleton
     @Provides
-    fun providesFakeRecyclerAdapterClickListenerImpl(): ImagesRecyclerAdapterClickListenerImplTestVersion{
+    fun providesFakeRecyclerAdapterClickListener(): ImagesRecyclerAdapterClickListener {
         return ImagesRecyclerAdapterClickListenerImplTestVersion()
     }
 
     @Singleton
     @Provides
-    fun providesFakeImagesRecyclerAdapter(imagesRecyclerAdapterClickListenerImplTestVersion: ImagesRecyclerAdapterClickListenerImplTestVersion): ImagesRecyclerAdapter{
-        return FakeImagesRecyclerAdapter(imagesRecyclerAdapterClickListenerImplTestVersion)
+    fun providesFakeImagesRecyclerAdapter(imagesRecyclerAdapterClickListener: ImagesRecyclerAdapterClickListener): ImagesRecyclerAdapter{
+        return FakeImagesRecyclerAdapter(imagesRecyclerAdapterClickListener)
     }
 }

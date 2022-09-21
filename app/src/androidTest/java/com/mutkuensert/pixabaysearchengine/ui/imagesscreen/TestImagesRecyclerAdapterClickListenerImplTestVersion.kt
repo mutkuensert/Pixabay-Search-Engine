@@ -23,6 +23,6 @@ class TestImagesRecyclerAdapterClickListenerImplTestVersion {
     @Test
     fun isDataResponseSuccessful(){
         listenerImpl.downloadUrlOnClick("https://raw.githubusercontent.com/mutkuensert/Files/main/test_image.jpg")
-        assert(listenerImpl.responseWillBeCheckedInTest.isSuccessful)
+        assert(listenerImpl.response.isSuccessful)
     }
 }

@@ -1,24 +1,25 @@
 package com.mutkuensert.pixabaysearchengine.ui.imagesscreen
 
-import android.graphics.Color
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.*
-import androidx.core.view.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.mutkuensert.pixabaysearchengine.data.ImageHitsModel
 import com.mutkuensert.pixabaysearchengine.data.ImageRequestModel
 import com.mutkuensert.pixabaysearchengine.databinding.FragmentImagesScreenBinding
-import com.mutkuensert.pixabaysearchengine.util.Resource
 import com.mutkuensert.pixabaysearchengine.util.Status
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 private const val TAG = "ImagesScreenFragment"
@@ -34,6 +35,25 @@ class ImagesScreenFragment : Fragment() {
     private var oldHitsList = mutableListOf<ImageHitsModel>()
     private val linearLayoutManager = LinearLayoutManager(this.context)
     private lateinit var loadMoreImageRequest: ImageRequestModel
+    private lateinit var startForResult: ActivityResultLauncher<Intent>
+    @Inject lateinit var imagesRecyclerAdapterClickListener: ImagesRecyclerAdapterClickListener
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initStartForResult()
+    }
+
+    private fun initStartForResult(){
+        var uri: Uri? = null
+        startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
+            if(result.resultCode == Activity.RESULT_OK){
+                uri = result.data?.data
+                imagesRecyclerAdapterClickListener.scope?.cancel()
+                imagesRecyclerAdapterClickListener.writeToFile(requireContext(), uri)
+            }
+        }
+        imagesRecyclerAdapterClickListener.startForResult = startForResult
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,8 +89,6 @@ class ImagesScreenFragment : Fragment() {
         spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                //Here the selected item in the spinner is being set to the next search configuration object.
-                //Thus, this config object: ImageRequestModel will be used in request service on next fragment.
                 (p0!!.getItemAtPosition(p2) as String).also{ selectedItem ->
                     with(binding){
                         with(nextImageSearchConfiguration){
@@ -87,7 +105,6 @@ class ImagesScreenFragment : Fragment() {
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
 
-                //Next search configuration parameters are being set to their default values.
                 with(binding){
                         with(ImageRequestModel()){
                             when(spinner){
@@ -107,7 +124,6 @@ class ImagesScreenFragment : Fragment() {
 
     private fun setOnClickListeners(){
 
-        //This listener sets the visibility of the spinners section of user query configuration
         binding.searchEditText.setEndIconOnClickListener {
             with(binding.spinnersLayout){
                 if(visibility == View.VISIBLE){
@@ -128,7 +144,6 @@ class ImagesScreenFragment : Fragment() {
 
     private fun setObservers(){
 
-        //Observing the data of the query.
         viewModel.data.observe(viewLifecycleOwner){ resource ->
             when(resource.status){
                 Status.STANDBY -> {}

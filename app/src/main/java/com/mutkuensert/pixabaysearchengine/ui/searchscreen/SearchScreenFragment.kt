@@ -175,16 +175,4 @@ class SearchScreenFragment : Fragment() {
                 }
             })
     }
-
-    private fun setDecorToFitSystemWindow(){
-        ViewCompat.setOnApplyWindowInsetsListener(binding.ownerIdTextCardView, OnApplyWindowInsetsListener { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-
-            view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomMargin = insets.bottom
-            }
-
-            WindowInsetsCompat.CONSUMED
-        })
-    }
 }
