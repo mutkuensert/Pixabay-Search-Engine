@@ -5,12 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import kotlinx.coroutines.CoroutineScope
-import java.io.InputStream
+import okhttp3.Response
 
 
 interface ImagesRecyclerAdapterClickListener {
     var startForResult: ActivityResultLauncher<Intent>?
-    var data: ByteArray?
+    var response: Response
     var scope: CoroutineScope?
 
     fun downloadUrlOnClick(url: String)

@@ -48,7 +48,6 @@ class ImagesScreenFragment : Fragment() {
         startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
             if(result.resultCode == Activity.RESULT_OK){
                 uri = result.data?.data
-                imagesRecyclerAdapterClickListener.scope?.cancel()
                 imagesRecyclerAdapterClickListener.writeToFile(requireContext(), uri)
             }
         }
@@ -188,6 +187,7 @@ class ImagesScreenFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        imagesRecyclerAdapterClickListener.scope?.cancel()
         _binding = null
     }
 }

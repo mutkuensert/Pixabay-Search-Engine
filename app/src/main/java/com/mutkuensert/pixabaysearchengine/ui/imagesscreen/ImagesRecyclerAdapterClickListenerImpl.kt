@@ -5,10 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -18,7 +15,7 @@ private const val TAG = "ImagesRecyclerAdapterClickListenerImpl"
 open class ImagesRecyclerAdapterClickListenerImpl: ImagesRecyclerAdapterClickListener {
 
     override var startForResult: ActivityResultLauncher<Intent>? = null
-    @Volatile override var data: ByteArray? = null
+    @Volatile override lateinit var response: Response
     override var scope: CoroutineScope? = CoroutineScope(Job() + Dispatchers.IO)
 
     override fun downloadUrlOnClick(url: String) {
@@ -28,50 +25,56 @@ open class ImagesRecyclerAdapterClickListenerImpl: ImagesRecyclerAdapterClickLis
                 .build()
             val client = OkHttpClient()
 
-            client.newCall(request).execute().use {
-                if(it.isSuccessful){
-                    data = it.body!!.bytes()
-                    createEmptyFile()
-                }else{
-                    Log.e(TAG, "Response is not successful.")
-                }
+            response = client.newCall(request).execute()
+            if(response.isSuccessful){
+                withContext(Dispatchers.Main) { createEmptyFile(url.substringAfterLast(".")) }
+            }else{
+                Log.e(TAG, "Response is not successful.")
             }
         }
 
     }
 
-    private fun createEmptyFile(){
+    private fun createEmptyFile(imageType: String){
+        var format = if(imageType.equals("jpg")) "jpeg" else imageType //There is no jpg in mime types: https://android.googlesource.com/platform/external/mime-support/+/9817b71a54a2ee8b691c1dfa937c0f9b16b3473c/mime.types
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
-            type = "image/*"
+            type = "image/$format"
+            putExtra(Intent.EXTRA_TITLE, "image")
         }
 
         startForResult?.launch(intent)
     }
 
     override fun writeToFile(context: Context, uri: Uri?) {
-        var bufferedInputStream: BufferedInputStream? = null
-        var bufferedOutputStream: BufferedOutputStream? = null
+        var outputStream: OutputStream? = null
         try {
             context.contentResolver.openFileDescriptor(uri!!,"wt")?.use {
-                bufferedInputStream = BufferedInputStream(data!!.inputStream())
-                bufferedOutputStream = BufferedOutputStream(FileOutputStream(it.fileDescriptor))
+                outputStream = FileOutputStream(it.fileDescriptor)
 
+                val buff = ByteArray(1024)
                 var read: Int
-                while(bufferedInputStream!!.read().also { read = it } > -1 ){
-                    bufferedOutputStream!!.write(read)
+                val stream = response.body!!.byteStream()
+                while(stream.read(buff, 0, buff.size).also { read = it } > -1 ){
+                    outputStream!!.write(buff, 0 , read)
                 }
-                bufferedOutputStream?.flush()
             }
         } catch(error: IOException) {
             Log.e(TAG,"${error.printStackTrace()}")
+            //return false
+
         } catch(error: FileNotFoundException) {
             Log.e(TAG,"${error.printStackTrace()}")
+            //return false
+
         }catch(error: NullPointerException) {
             Log.e(TAG, "${error.printStackTrace()}")
+            //return false
+
         } finally {
-            bufferedInputStream?.close()
-            bufferedOutputStream?.close()
+            response.body?.close()
+            outputStream?.close()
         }
+        //return true
     }
 }

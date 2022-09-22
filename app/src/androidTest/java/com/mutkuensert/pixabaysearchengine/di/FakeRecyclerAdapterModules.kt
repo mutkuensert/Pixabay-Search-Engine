@@ -6,24 +6,24 @@ import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapter
 import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapterClickListener
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.scopes.FragmentScoped
 import dagger.hilt.testing.TestInstallIn
-import javax.inject.Singleton
 
 @Module
 @TestInstallIn(
-    components = [SingletonComponent::class],
+    components = [FragmentComponent::class],
     replaces = [RecyclerAdapterModules::class]
 )
 object FakeRecyclerAdapterModules {
 
-    @Singleton
+    @FragmentScoped
     @Provides
     fun providesFakeRecyclerAdapterClickListener(): ImagesRecyclerAdapterClickListener {
         return ImagesRecyclerAdapterClickListenerImplTestVersion()
     }
 
-    @Singleton
+    @FragmentScoped
     @Provides
     fun providesFakeImagesRecyclerAdapter(imagesRecyclerAdapterClickListener: ImagesRecyclerAdapterClickListener): ImagesRecyclerAdapter{
         return FakeImagesRecyclerAdapter(imagesRecyclerAdapterClickListener)

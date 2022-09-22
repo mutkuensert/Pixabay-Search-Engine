@@ -16,8 +16,7 @@ private const val TAG = "ImagesRecyclerAdapterClickListenerImplTestVersion"
 class ImagesRecyclerAdapterClickListenerImplTestVersion: ImagesRecyclerAdapterClickListener {
 
     override var startForResult: ActivityResultLauncher<Intent>? = null
-    override var data: ByteArray? = null
-    lateinit var response: Response
+    override lateinit var response: Response
     override var scope: CoroutineScope? = null
 
     override fun downloadUrlOnClick(url: String) {
@@ -49,9 +48,22 @@ class ImagesRecyclerAdapterClickListenerImplTestVersion: ImagesRecyclerAdapterCl
                 bufferedOutputStream.write(read)
             }
             bufferedOutputStream.flush()
+        } catch(error: IOException) {
+            Log.e(TAG,"${error.printStackTrace()}")
+            //return false
+
+        } catch(error: FileNotFoundException) {
+            Log.e(TAG,"${error.printStackTrace()}")
+            //return false
+
+        }catch(error: NullPointerException) {
+            Log.e(TAG, "${error.printStackTrace()}")
+            //return false
+
         } finally {
             bufferedInputStream?.close()
             bufferedOutputStream?.close()
         }
+        //return true
     }
 }
