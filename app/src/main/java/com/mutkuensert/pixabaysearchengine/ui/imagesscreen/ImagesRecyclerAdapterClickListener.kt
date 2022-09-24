@@ -12,7 +12,8 @@ interface ImagesRecyclerAdapterClickListener {
     var startForResult: ActivityResultLauncher<Intent>?
     var response: Response
     var scope: CoroutineScope?
+    var notificationId: Int
 
     fun downloadUrlOnClick(url: String)
-    fun writeToFile(context: Context, uri: Uri?)
+    fun writeToFile(context: Context, uri: Uri?, channelId: String)
 }

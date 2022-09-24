@@ -5,6 +5,9 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.mutkuensert.pixabaysearchengine.R
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -17,6 +20,7 @@ open class ImagesRecyclerAdapterClickListenerImpl: ImagesRecyclerAdapterClickLis
     override var startForResult: ActivityResultLauncher<Intent>? = null
     @Volatile override lateinit var response: Response
     override var scope: CoroutineScope? = CoroutineScope(Job() + Dispatchers.IO)
+    override var notificationId: Int = 0
 
     override fun downloadUrlOnClick(url: String) {
         scope?.launch {
@@ -46,35 +50,62 @@ open class ImagesRecyclerAdapterClickListenerImpl: ImagesRecyclerAdapterClickLis
         startForResult?.launch(intent)
     }
 
-    override fun writeToFile(context: Context, uri: Uri?) {
+    override fun writeToFile(context: Context, uri: Uri?, channelId: String) {
+        val builder = NotificationCompat.Builder(context, channelId).apply {
+            setContentTitle("Picture Download")
+            setContentText("Download in progress")
+            setSmallIcon(R.drawable.ic_search)
+            setPriority(NotificationCompat.PRIORITY_LOW)
+        }
         var outputStream: OutputStream? = null
-        try {
-            context.contentResolver.openFileDescriptor(uri!!,"wt")?.use {
-                outputStream = FileOutputStream(it.fileDescriptor)
 
-                val buff = ByteArray(1024)
-                var read: Int
-                val stream = response.body!!.byteStream()
-                while(stream.read(buff, 0, buff.size).also { read = it } > -1 ){
-                    outputStream!!.write(buff, 0 , read)
+        val PROGRESS_MAX = 100
+        val PROGRESS_CURRENT = 0
+
+        try {
+            NotificationManagerCompat.from(context).apply {
+                builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false)
+                notify(notificationId, builder.build())
+                context.contentResolver.openFileDescriptor(uri!!,"wt")?.use {
+                    outputStream = FileOutputStream(it.fileDescriptor)
+
+                    val buff = ByteArray(1024)
+                    var read: Int
+                    var bytesCopied = 0
+                    val stream = response.body!!.byteStream()
+                    val contentLength = response.body!!.contentLength()
+                    var currentTimeMillis = System.currentTimeMillis()
+
+                    while(stream.read(buff, 0, buff.size).also { read = it } > -1 ){
+                        outputStream!!.write(buff, 0 , read)
+                        bytesCopied += read
+                        val progressCurrent = ((bytesCopied*100)/contentLength).toInt()
+                        if((System.currentTimeMillis() - currentTimeMillis)>1000){
+                            builder.setProgress(PROGRESS_MAX, progressCurrent, false);
+                            notify(notificationId, builder.build());
+                        }
+                        currentTimeMillis = System.currentTimeMillis()
+                    }
                 }
+
+                builder.setContentText("Download complete")
+                    .setProgress(0, 0, false)
+                notify(notificationId, builder.build())
+                notificationId += 1
             }
+
         } catch(error: IOException) {
             Log.e(TAG,"${error.printStackTrace()}")
-            //return false
 
         } catch(error: FileNotFoundException) {
             Log.e(TAG,"${error.printStackTrace()}")
-            //return false
 
         }catch(error: NullPointerException) {
             Log.e(TAG, "${error.printStackTrace()}")
-            //return false
 
         } finally {
             response.body?.close()
             outputStream?.close()
         }
-        //return true
     }
 }

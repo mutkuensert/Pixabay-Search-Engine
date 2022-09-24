@@ -18,6 +18,7 @@ class ImagesRecyclerAdapterClickListenerImplTestVersion: ImagesRecyclerAdapterCl
     override var startForResult: ActivityResultLauncher<Intent>? = null
     override lateinit var response: Response
     override var scope: CoroutineScope? = null
+    override var notificationId: Int = 0
 
     override fun downloadUrlOnClick(url: String) {
         val request = Request.Builder()
@@ -28,14 +29,14 @@ class ImagesRecyclerAdapterClickListenerImplTestVersion: ImagesRecyclerAdapterCl
         client.newCall(request).execute().use {
             response = it
             if(response.isSuccessful){
-                writeToFile(ApplicationProvider.getApplicationContext(), null)
+                writeToFile(ApplicationProvider.getApplicationContext(), null, "Test channel id")
             }else{
                 Log.e(TAG, "The response is not successful.")
             }
         }
     }
 
-    override fun writeToFile(context: Context, uri: Uri?) {
+    override fun writeToFile(context: Context, uri: Uri?, channelId: String) {
         var bufferedInputStream: BufferedInputStream? = null
         var bufferedOutputStream: BufferedOutputStream? = null
 
