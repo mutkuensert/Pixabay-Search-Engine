@@ -30,7 +30,11 @@ open class ImagesRecyclerAdapter(private val onClickListener: ImagesRecyclerAdap
 
         with(holder.binding){
 
-            imageView.setOnClickListener { onClickListener.downloadUrlOnClick(getItem(position).largeImageURL!!) }
+            imageView.setOnClickListener {
+                imageInfos.visibility = if(imageInfos.visibility == View.GONE){ View.VISIBLE } else { View.GONE }
+            }
+
+            downloadButton.setOnClickListener { onClickListener.downloadUrlOnClick(getItem(position).largeImageURL!!) }
 
             Glide
                 .with(imageView.context)

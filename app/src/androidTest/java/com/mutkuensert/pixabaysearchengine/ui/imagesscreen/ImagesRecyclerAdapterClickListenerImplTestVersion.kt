@@ -51,20 +51,16 @@ class ImagesRecyclerAdapterClickListenerImplTestVersion: ImagesRecyclerAdapterCl
             bufferedOutputStream.flush()
         } catch(error: IOException) {
             Log.e(TAG,"${error.printStackTrace()}")
-            //return false
 
         } catch(error: FileNotFoundException) {
             Log.e(TAG,"${error.printStackTrace()}")
-            //return false
 
         }catch(error: NullPointerException) {
             Log.e(TAG, "${error.printStackTrace()}")
-            //return false
 
         } finally {
             bufferedInputStream?.close()
             bufferedOutputStream?.close()
         }
-        //return true
     }
 }
