@@ -34,16 +34,32 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardBackgroundColor="#40000000"
+                app:cardBackgroundColor="#59000000"
                 android:visibility="gone"
                 android:id="@+id/imageInfos">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="15dp"
+                    android:layout_margin="3dp"
+                    app:cardBackgroundColor="#D9FFFFFF"
+                    app:cardUseCompatPadding="true"
+                    android:layout_gravity="bottom|start">
+                    <TextView
+                        android:layout_margin="4dp"
+                        android:id="@+id/ownerNameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Owner"/>
+                </androidx.cardview.widget.CardView>
+
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_download"
-                    android:layout_gravity="bottom|start"
-                    android:id="@+id/downloadButton"
-                    />
+                    android:layout_gravity="bottom|end"
+                    android:id="@+id/downloadButton"/>
 
             </androidx.cardview.widget.CardView>
         </FrameLayout>

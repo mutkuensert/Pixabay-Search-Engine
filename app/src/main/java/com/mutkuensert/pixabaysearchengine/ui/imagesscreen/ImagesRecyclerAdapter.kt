@@ -36,6 +36,9 @@ open class ImagesRecyclerAdapter(private val onClickListener: ImagesRecyclerAdap
 
             downloadButton.setOnClickListener { onClickListener.downloadUrlOnClick(getItem(position).largeImageURL!!) }
 
+            val ownerText = "Owner: " + getItem(position).user
+            ownerNameTextView.text = ownerText
+
             Glide
                 .with(imageView.context)
                 .load(getItem(position).largeImageURL)
