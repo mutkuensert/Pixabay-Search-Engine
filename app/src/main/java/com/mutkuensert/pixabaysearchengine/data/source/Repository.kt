@@ -1,29 +1,15 @@
 package com.mutkuensert.pixabaysearchengine.data.source
 
-import android.content.Context
-import com.mutkuensert.pixabaysearchengine.data.ImageHitsModel
-import com.mutkuensert.pixabaysearchengine.data.ImageRequestModel
-import com.mutkuensert.pixabaysearchengine.data.ImagesModel
+import com.mutkuensert.pixabaysearchengine.data.image.ImageHitsModel
+import com.mutkuensert.pixabaysearchengine.data.image.ImageRequestModel
+import com.mutkuensert.pixabaysearchengine.data.image.ImagesModel
+import com.mutkuensert.pixabaysearchengine.data.video.MainVideosModel
+import com.mutkuensert.pixabaysearchengine.data.video.VideoRequestModel
 import com.mutkuensert.pixabaysearchengine.util.Resource
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 import kotlin.random.Random
 
-open class ImagesRepository @Inject constructor (
-    @ApplicationContext context: Context
-){
-
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface ImagesRepoEntryPoint{
-        fun requestService(): RequestService
-    }
-
-    private val requestService = EntryPointAccessors.fromApplication(context, ImagesRepoEntryPoint::class.java).requestService()
+open class Repository @Inject constructor (private val requestService: RequestService){
 
     open suspend fun requestBackgroundImage(): Resource<ImageHitsModel>{
 
@@ -64,6 +50,26 @@ open class ImagesRepository @Inject constructor (
         }
 
         //ELSE
+        return Resource.error("Error.", null)
+    }
+
+    open suspend fun  requestVideos(videoRequestModel: VideoRequestModel): Resource<MainVideosModel>{
+        videoRequestModel.also {
+            val response = requestService.searchVideoRequest(
+                search = it.search,
+                videoType = it.videoType,
+                minWidth = it.minWidth,
+                minHeight = it.minHeight,
+                editorsChoice = it.editorsChoice,
+                safeSearch = it.safeSearch,
+                order = it.order,
+                page = it.page,
+                perPage = it.perPage
+            )
+            if(response.isSuccessful){
+                return Resource.success(response.body())
+            }
+        }
         return Resource.error("Error.", null)
     }
 }

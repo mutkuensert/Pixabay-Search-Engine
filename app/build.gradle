@@ -102,6 +102,8 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
+
 }
 kapt {
     correctErrorTypes true

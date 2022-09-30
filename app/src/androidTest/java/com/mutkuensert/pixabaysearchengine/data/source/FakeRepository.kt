@@ -1,13 +1,13 @@
 package com.mutkuensert.pixabaysearchengine.data.source
 
 import androidx.test.core.app.ApplicationProvider
-import com.mutkuensert.pixabaysearchengine.data.ImageHitsModel
-import com.mutkuensert.pixabaysearchengine.data.ImageRequestModel
-import com.mutkuensert.pixabaysearchengine.data.ImagesModel
+import com.mutkuensert.pixabaysearchengine.data.image.ImageHitsModel
+import com.mutkuensert.pixabaysearchengine.data.image.ImageRequestModel
+import com.mutkuensert.pixabaysearchengine.data.image.ImagesModel
 import com.mutkuensert.pixabaysearchengine.util.Resource
 import kotlinx.coroutines.delay
 
-class FakeImagesRepository(): ImagesRepository(ApplicationProvider.getApplicationContext()) {
+class FakeRepository(): Repository(ApplicationProvider.getApplicationContext()) {
     private var lastId = 0
 
     override suspend fun requestBackgroundImage(): Resource<ImageHitsModel> {
@@ -68,7 +68,8 @@ class FakeImagesRepository(): ImagesRepository(ApplicationProvider.getApplicatio
                     userId = null,
                     user = null,
                     userImageURL = null,
-                ))
+                )
+            )
         }
         lastId += 3
         val imagesModel = ImagesModel(null, null, hits)

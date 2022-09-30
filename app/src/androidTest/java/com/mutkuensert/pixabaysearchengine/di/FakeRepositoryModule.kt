@@ -1,8 +1,7 @@
 package com.mutkuensert.pixabaysearchengine.di
 
-import com.mutkuensert.pixabaysearchengine.data.source.FakeImagesRepository
-import com.mutkuensert.pixabaysearchengine.data.source.ImagesRepository
-import dagger.Binds
+import com.mutkuensert.pixabaysearchengine.data.source.FakeRepository
+import com.mutkuensert.pixabaysearchengine.data.source.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -18,7 +17,7 @@ object FakeRepositoryModule {
 
     @Singleton
     @Provides
-    fun providesImagesRepository(): ImagesRepository {
-        return FakeImagesRepository()
+    fun providesRepository(): Repository {
+        return FakeRepository()
     }
 }

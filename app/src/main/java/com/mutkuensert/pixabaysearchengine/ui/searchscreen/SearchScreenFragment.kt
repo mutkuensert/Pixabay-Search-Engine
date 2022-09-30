@@ -11,20 +11,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.core.view.*
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
-import com.mutkuensert.pixabaysearchengine.data.ImageRequestModel
+import com.mutkuensert.pixabaysearchengine.data.image.ImageRequestModel
+import com.mutkuensert.pixabaysearchengine.data.video.VideoRequestModel
 import com.mutkuensert.pixabaysearchengine.databinding.FragmentSearchScreenBinding
 import com.mutkuensert.pixabaysearchengine.util.Status
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
 
 private const val TAG = "SearchScreenFragment"
 
@@ -33,8 +30,8 @@ class SearchScreenFragment : Fragment() {
     private var _binding: FragmentSearchScreenBinding? = null
     private val binding get() = _binding!!
     private val viewModel: SearchScreenFragmentViewModel by viewModels()
-    private var imageOrVideoSelection: String = "image"
     private var imageRequestModel = ImageRequestModel()
+    private var videoRequestModel = VideoRequestModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,11 +68,11 @@ class SearchScreenFragment : Fragment() {
 
             with(binding.backgroundImage){
                 when(resource.status){
-                    Status.STANDBY -> println("")//setImageDrawable(null)
+                    Status.STANDBY -> {}
 
                     Status.LOADING -> CircularProgressDrawable(this.context).apply {
                         strokeWidth = 15f
-                        centerRadius = 550f
+                        centerRadius = 150f
                         setColorSchemeColors(Color.GRAY)
                         start()
                     }.also { setImageDrawable(it) }
@@ -97,11 +94,18 @@ class SearchScreenFragment : Fragment() {
 
         //This is search icon button.
         binding.searchEditText.setEndIconOnClickListener {
-            //TODO("Put the right (image or video)requestModel as parameter.")
-            imageRequestModel.search = binding.searchEditText.editText!!.text.toString()
-            SearchScreenFragmentDirections.actionSearchScreenFragmentToImagesScreenFragment(imageRequestModel).also {
-                findNavController().navigate(it)
+            if(binding.imageOrVideoSpinner.selectedItem as String == "image"){
+                imageRequestModel.search = binding.searchEditText.editText!!.text.toString()
+                SearchScreenFragmentDirections.actionSearchScreenFragmentToImagesScreenFragment(imageRequestModel).also {
+                    findNavController().navigate(it)
+                }
+            }else if(binding.imageOrVideoSpinner.selectedItem as String == "video"){
+                videoRequestModel.search = binding.searchEditText.editText!!.text.toString()
+                SearchScreenFragmentDirections.actionSearchScreenFragmentToVideosFragment(videoRequestModel).also {
+                    findNavController().navigate(it)
+                }
             }
+
         }
     }
 
@@ -118,15 +122,14 @@ class SearchScreenFragment : Fragment() {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 p0!!.getItemAtPosition(p2).also { item ->
                     setImageOrVideoTypeSpinnerContents(item as String)
-                    imageOrVideoSelection = item as String
 
                     if(item == "video") imageRequestModel = ImageRequestModel() //It's being set to default.
-                    //TODO("If item ='image', videoRequestModel should be set to default.")
+                    if(item == "image") videoRequestModel = VideoRequestModel()
                 }
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                imageOrVideoSelection = "image"
+
             }
         }
     }
@@ -153,13 +156,13 @@ class SearchScreenFragment : Fragment() {
 
                     if(type == "image") imageRequestModel.imageType = item as String
 
-                    //if(type == "video") TODO("Video type in videoRequestModel should be changed.")
+                    if(type == "video") videoRequestModel.videoType = item as String
                 }
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 if(type == "image") imageRequestModel.imageType = "all"
-                //TODO("If it's video, set type in videoRequestModel to all, otherwise do the opposite")
+                if(type == "video") videoRequestModel.videoType = "all"
             }
         }
     }

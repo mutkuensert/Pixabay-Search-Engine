@@ -1,5 +1,6 @@
 package com.mutkuensert.pixabaysearchengine.data
 
+import com.mutkuensert.pixabaysearchengine.data.image.ImagesModel
 import com.mutkuensert.pixabaysearchengine.data.source.RequestService
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest

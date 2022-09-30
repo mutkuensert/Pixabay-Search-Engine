@@ -3,6 +3,7 @@ package com.mutkuensert.pixabaysearchengine.di
 import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapter
 import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapterClickListener
 import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapterClickListenerImpl
+import com.mutkuensert.pixabaysearchengine.ui.videosscreen.VideosRecyclerAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,5 +24,11 @@ object RecyclerAdapterModules {
     @Provides
     fun providesImagesRecyclerAdapter(impl: ImagesRecyclerAdapterClickListener): ImagesRecyclerAdapter{
         return ImagesRecyclerAdapter(impl)
+    }
+
+    @FragmentScoped
+    @Provides
+    fun providesVideosRecyclerAdapter(): VideosRecyclerAdapter{
+        return VideosRecyclerAdapter()
     }
 }

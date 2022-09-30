@@ -2,11 +2,7 @@ package com.mutkuensert.pixabaysearchengine.ui.imagesscreen
 
 import android.Manifest
 import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,25 +11,21 @@ import android.view.*
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mutkuensert.pixabaysearchengine.R
-import com.mutkuensert.pixabaysearchengine.data.ImageHitsModel
-import com.mutkuensert.pixabaysearchengine.data.ImageRequestModel
+import com.mutkuensert.pixabaysearchengine.data.image.ImageHitsModel
+import com.mutkuensert.pixabaysearchengine.data.image.ImageRequestModel
 import com.mutkuensert.pixabaysearchengine.databinding.FragmentImagesScreenBinding
+import com.mutkuensert.pixabaysearchengine.util.CHANNEL_ID
 import com.mutkuensert.pixabaysearchengine.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 private const val TAG = "ImagesScreenFragment"
-private const val CHANNEL_ID = "notification_channel_1"
 
 @AndroidEntryPoint
 class ImagesScreenFragment : Fragment() {
@@ -44,14 +36,12 @@ class ImagesScreenFragment : Fragment() {
     @Inject lateinit var recyclerAdapter: ImagesRecyclerAdapter
     private var nextImageSearchConfiguration = ImageRequestModel()
     private var oldHitsList = mutableListOf<ImageHitsModel>()
-    private val linearLayoutManager = LinearLayoutManager(this.context)
     private lateinit var loadMoreImageRequest: ImageRequestModel
     private lateinit var startForResult: ActivityResultLauncher<Intent>
     @Inject lateinit var imagesRecyclerAdapterClickListener: ImagesRecyclerAdapterClickListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        createNotificationChannel()
         initStartForResult()
     }
 
@@ -82,7 +72,7 @@ class ImagesScreenFragment : Fragment() {
         setObservers()
         requestDownloadProgressIndicatorNotificationPermission()
 
-        binding.recyclerView.layoutManager = linearLayoutManager
+        binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
         binding.recyclerView.adapter = recyclerAdapter
 
         viewModel.requestImages(args.imageRequestModel)
@@ -90,20 +80,6 @@ class ImagesScreenFragment : Fragment() {
         setSpinners()
 
         loadMoreImageRequest = args.imageRequestModel
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.channel_name)
-            val descriptionText = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_LOW // https://stackoverflow.com/a/45920861
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-            val notificationManager: NotificationManager =
-                requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
     }
 
     private fun requestDownloadProgressIndicatorNotificationPermission(){

@@ -1,6 +1,7 @@
 package com.mutkuensert.pixabaysearchengine.data.source
 
-import com.mutkuensert.pixabaysearchengine.data.ImagesModel
+import com.mutkuensert.pixabaysearchengine.data.image.ImagesModel
+import com.mutkuensert.pixabaysearchengine.data.video.MainVideosModel
 import com.mutkuensert.pixabaysearchengine.util.BASE_URL
 import com.mutkuensert.pixabaysearcher.util.API_KEY
 import retrofit2.Response
@@ -24,4 +25,18 @@ interface RequestService {
         @Query("page") page: Int = 1,
         @Query("per_page") perPage: Int = 20, //3-200
     ): Response<ImagesModel>
+
+    @GET("videos")
+    suspend fun searchVideoRequest(
+        @Query("key") key: String = API_KEY,
+        @Query("q") search: String,
+        @Query("video_type") videoType: String = "all",
+        @Query("min_width") minWidth: Int = 0,
+        @Query("min_height") minHeight: Int = 0,
+        @Query("editors_choice") editorsChoice: Boolean = false,
+        @Query("safesearch") safeSearch: Boolean = true,
+        @Query("order") order: String = "popular", // popular, latest
+        @Query("page") page: Int = 1,
+        @Query("per_page") perPage: Int = 20, //3-200
+    ): Response<MainVideosModel>
 }

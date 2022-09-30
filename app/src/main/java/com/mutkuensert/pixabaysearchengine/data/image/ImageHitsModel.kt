@@ -1,4 +1,4 @@
-package com.mutkuensert.pixabaysearchengine.data
+package com.mutkuensert.pixabaysearchengine.data.image
 
 import com.squareup.moshi.Json
 

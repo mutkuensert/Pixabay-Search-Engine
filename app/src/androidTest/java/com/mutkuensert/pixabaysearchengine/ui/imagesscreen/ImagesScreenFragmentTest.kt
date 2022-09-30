@@ -1,7 +1,7 @@
 package com.mutkuensert.pixabaysearchengine.ui.imagesscreen
 
 import com.mutkuensert.pixabaysearchengine.R
-import com.mutkuensert.pixabaysearchengine.data.ImageRequestModel
+import com.mutkuensert.pixabaysearchengine.data.image.ImageRequestModel
 import com.mutkuensert.pixabaysearchengine.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
