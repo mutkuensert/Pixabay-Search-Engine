@@ -38,7 +38,6 @@ class ImagesScreenFragment : Fragment() {
     private var oldHitsList = mutableListOf<ImageHitsModel>()
     private lateinit var loadMoreImageRequest: ImageRequestModel
     private lateinit var startForResult: ActivityResultLauncher<Intent>
-    @Inject lateinit var imagesRecyclerAdapterClickListener: ImagesRecyclerAdapterClickListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +49,10 @@ class ImagesScreenFragment : Fragment() {
         startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
             if(result.resultCode == Activity.RESULT_OK){
                 uri = result.data?.data
-                imagesRecyclerAdapterClickListener.writeToFile(requireContext(), uri, CHANNEL_ID)
+                recyclerAdapter.onClickListener.writeToFile(requireContext(), uri, CHANNEL_ID)
             }
         }
-        imagesRecyclerAdapterClickListener.startForResult = startForResult
+        recyclerAdapter.onClickListener.startForResult = startForResult
     }
 
     override fun onCreateView(
@@ -224,7 +223,7 @@ class ImagesScreenFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        imagesRecyclerAdapterClickListener.scope?.cancel()
+        recyclerAdapter.onClickListener.scope?.cancel()
         _binding = null
     }
 }

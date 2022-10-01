@@ -15,7 +15,7 @@ import com.bumptech.glide.request.target.Target
 import com.mutkuensert.pixabaysearchengine.data.image.ImageHitsModel
 import com.mutkuensert.pixabaysearchengine.databinding.SingleImageItemBinding
 
-open class ImagesRecyclerAdapter(private val onClickListener: ImagesRecyclerAdapterClickListener): ListAdapter<ImageHitsModel,ImagesRecyclerAdapter.ViewHolder>(ImageHitsModelListDiffCallback){
+open class ImagesRecyclerAdapter(val onClickListener: ImagesRecyclerAdapterClickListener): ListAdapter<ImageHitsModel,ImagesRecyclerAdapter.ViewHolder>(ImageHitsModelListDiffCallback){
     class ViewHolder(val binding: SingleImageItemBinding): RecyclerView.ViewHolder(binding.root){
 
     }

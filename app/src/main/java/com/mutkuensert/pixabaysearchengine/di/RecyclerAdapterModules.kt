@@ -16,14 +16,8 @@ object RecyclerAdapterModules {
 
     @FragmentScoped
     @Provides
-    fun providesImagesRecyclerAdapterClickListener(): ImagesRecyclerAdapterClickListener{
-        return ImagesRecyclerAdapterClickListenerImpl()
-    }
-
-    @FragmentScoped
-    @Provides
-    fun providesImagesRecyclerAdapter(impl: ImagesRecyclerAdapterClickListener): ImagesRecyclerAdapter{
-        return ImagesRecyclerAdapter(impl)
+    fun providesImagesRecyclerAdapter(): ImagesRecyclerAdapter{
+        return ImagesRecyclerAdapter(ImagesRecyclerAdapterClickListenerImpl())
     }
 
     @FragmentScoped
