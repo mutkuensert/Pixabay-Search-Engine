@@ -49,10 +49,10 @@ class ImagesScreenFragment : Fragment() {
         startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
             if(result.resultCode == Activity.RESULT_OK){
                 uri = result.data?.data
-                recyclerAdapter.onClickListener.writeToFile(requireContext(), uri, CHANNEL_ID)
+                recyclerAdapter.downloader.writeToFile(requireContext(), uri, CHANNEL_ID)
             }
         }
-        recyclerAdapter.onClickListener.startForResult = startForResult
+        recyclerAdapter.downloader.startForResult = startForResult
     }
 
     override fun onCreateView(
@@ -223,7 +223,7 @@ class ImagesScreenFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        recyclerAdapter.onClickListener.scope?.cancel()
+        recyclerAdapter.downloader.scope?.cancel()
         _binding = null
     }
 }

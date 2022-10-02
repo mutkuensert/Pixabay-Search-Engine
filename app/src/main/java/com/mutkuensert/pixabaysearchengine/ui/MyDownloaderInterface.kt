@@ -1,4 +1,4 @@
-package com.mutkuensert.pixabaysearchengine.ui.imagesscreen
+package com.mutkuensert.pixabaysearchengine.ui
 
 import android.content.Context
 import android.content.Intent
@@ -7,13 +7,12 @@ import androidx.activity.result.ActivityResultLauncher
 import kotlinx.coroutines.CoroutineScope
 import okhttp3.Response
 
-
-interface ImagesRecyclerAdapterClickListener {
+interface MyDownloaderInterface {
     var startForResult: ActivityResultLauncher<Intent>?
-    var response: Response
+    var response: Response?
     var scope: CoroutineScope?
     var notificationId: Int
-
-    fun downloadUrlOnClick(url: String)
+    fun downloadUrl(url: String)
+    fun createEmptyFile(imageType: String)
     fun writeToFile(context: Context, uri: Uri?, channelId: String)
 }

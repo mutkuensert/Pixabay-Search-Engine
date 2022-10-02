@@ -1,9 +1,7 @@
 package com.mutkuensert.pixabaysearchengine.di
 
-import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.FakeImagesRecyclerAdapter
-import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapterClickListenerImplTestVersion
-import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapter
-import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesRecyclerAdapterClickListener
+import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.*
+import com.mutkuensert.pixabaysearchengine.ui.videosscreen.VideosRecyclerAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.android.components.FragmentComponent
@@ -19,13 +17,13 @@ object FakeRecyclerAdapterModules {
 
     @FragmentScoped
     @Provides
-    fun providesFakeRecyclerAdapterClickListener(): ImagesRecyclerAdapterClickListener {
-        return ImagesRecyclerAdapterClickListenerImplTestVersion()
+    fun providesFakeImagesRecyclerAdapter(): ImagesRecyclerAdapter{
+        return FakeImagesRecyclerAdapter()
     }
 
     @FragmentScoped
     @Provides
-    fun providesFakeImagesRecyclerAdapter(imagesRecyclerAdapterClickListener: ImagesRecyclerAdapterClickListener): ImagesRecyclerAdapter{
-        return FakeImagesRecyclerAdapter(imagesRecyclerAdapterClickListener)
+    fun providesVideosRecyclerAdapter(): VideosRecyclerAdapter {
+        return VideosRecyclerAdapter()
     }
 }

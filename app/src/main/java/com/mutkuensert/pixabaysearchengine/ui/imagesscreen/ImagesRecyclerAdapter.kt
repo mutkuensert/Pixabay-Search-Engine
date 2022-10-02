@@ -14,8 +14,9 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.mutkuensert.pixabaysearchengine.data.image.ImageHitsModel
 import com.mutkuensert.pixabaysearchengine.databinding.SingleImageItemBinding
+import com.mutkuensert.pixabaysearchengine.ui.MyDownloaderInterface
 
-open class ImagesRecyclerAdapter(val onClickListener: ImagesRecyclerAdapterClickListener): ListAdapter<ImageHitsModel,ImagesRecyclerAdapter.ViewHolder>(ImageHitsModelListDiffCallback){
+open class ImagesRecyclerAdapter(val downloader: MyDownloaderInterface): ListAdapter<ImageHitsModel,ImagesRecyclerAdapter.ViewHolder>(ImageHitsModelListDiffCallback){
     class ViewHolder(val binding: SingleImageItemBinding): RecyclerView.ViewHolder(binding.root){
 
     }
@@ -33,7 +34,7 @@ open class ImagesRecyclerAdapter(val onClickListener: ImagesRecyclerAdapterClick
                 imageInfos.visibility = if(imageInfos.visibility == View.GONE){ View.VISIBLE } else { View.GONE }
             }
 
-            downloadButton.setOnClickListener { onClickListener.downloadUrlOnClick(getItem(position).largeImageURL!!) }
+            downloadButton.setOnClickListener { downloader.downloadUrl(getItem(position).largeImageURL!!) }
 
             val ownerText = "Owner: " + getItem(position).user
             ownerNameTextView.text = ownerText

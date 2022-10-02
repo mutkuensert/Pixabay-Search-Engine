@@ -6,21 +6,21 @@ import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.test.core.app.ApplicationProvider
+import com.mutkuensert.pixabaysearchengine.ui.MyDownloaderInterface
 import kotlinx.coroutines.CoroutineScope
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.*
 
-private const val TAG = "ImagesRecyclerAdapterClickListenerImplTestVersion"
-class ImagesRecyclerAdapterClickListenerImplTestVersion: ImagesRecyclerAdapterClickListener {
-
+private const val TAG = "MyDownloaderTestVersion"
+class MyDownloaderTestVersion: MyDownloaderInterface {
     override var startForResult: ActivityResultLauncher<Intent>? = null
-    override lateinit var response: Response
+    override var response: Response? = null
     override var scope: CoroutineScope? = null
     override var notificationId: Int = 0
 
-    override fun downloadUrlOnClick(url: String) {
+    override fun downloadUrl(url: String) {
         val request = Request.Builder()
             .url(url)
             .build()
@@ -28,12 +28,16 @@ class ImagesRecyclerAdapterClickListenerImplTestVersion: ImagesRecyclerAdapterCl
 
         client.newCall(request).execute().use {
             response = it
-            if(response.isSuccessful){
+            if(response!!.isSuccessful){
                 writeToFile(ApplicationProvider.getApplicationContext(), null, "Test channel id")
             }else{
                 Log.e(TAG, "The response is not successful.")
             }
         }
+    }
+
+    override fun createEmptyFile(imageType: String) {
+        //Nothing to do in tests.
     }
 
     override fun writeToFile(context: Context, uri: Uri?, channelId: String) {
@@ -42,7 +46,7 @@ class ImagesRecyclerAdapterClickListenerImplTestVersion: ImagesRecyclerAdapterCl
 
         try {
             val file = File.createTempFile("pic", ".jpg")
-            bufferedInputStream = BufferedInputStream(response.body?.byteStream())
+            bufferedInputStream = BufferedInputStream(response!!.body?.byteStream())
             bufferedOutputStream = BufferedOutputStream(FileOutputStream(file))
             var read: Int
             while(bufferedInputStream.read().also { read = it }>-1){

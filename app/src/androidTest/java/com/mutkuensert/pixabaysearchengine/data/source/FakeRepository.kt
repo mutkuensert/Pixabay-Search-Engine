@@ -1,13 +1,12 @@
 package com.mutkuensert.pixabaysearchengine.data.source
 
-import androidx.test.core.app.ApplicationProvider
 import com.mutkuensert.pixabaysearchengine.data.image.ImageHitsModel
 import com.mutkuensert.pixabaysearchengine.data.image.ImageRequestModel
 import com.mutkuensert.pixabaysearchengine.data.image.ImagesModel
 import com.mutkuensert.pixabaysearchengine.util.Resource
 import kotlinx.coroutines.delay
 
-class FakeRepository(): Repository(ApplicationProvider.getApplicationContext()) {
+class FakeRepository(requestService: RequestService): Repository(requestService) {
     private var lastId = 0
 
     override suspend fun requestBackgroundImage(): Resource<ImageHitsModel> {

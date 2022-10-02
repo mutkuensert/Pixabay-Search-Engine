@@ -8,21 +8,21 @@ import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
-class TestImagesRecyclerAdapterClickListenerImplTestVersion {
+class TestMyDownloaderTestVersion {
 
     @get:Rule
     var rule = HiltAndroidRule(this)
 
-    private lateinit var listenerImpl: ImagesRecyclerAdapterClickListenerImplTestVersion
+    private lateinit var downloader: MyDownloaderTestVersion
 
     @Before
     fun initializeListenerImpl(){
-        listenerImpl = ImagesRecyclerAdapterClickListenerImplTestVersion()
+        downloader = MyDownloaderTestVersion()
     }
 
     @Test
     fun isDataResponseSuccessful(){
-        listenerImpl.downloadUrlOnClick("https://raw.githubusercontent.com/mutkuensert/Files/main/test_image.jpg")
-        assert(listenerImpl.response.isSuccessful)
+        downloader.downloadUrl("https://raw.githubusercontent.com/mutkuensert/Files/main/test_image.jpg")
+        assert(downloader.response!!.isSuccessful)
     }
 }
