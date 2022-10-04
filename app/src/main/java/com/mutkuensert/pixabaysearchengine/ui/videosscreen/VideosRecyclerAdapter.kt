@@ -14,22 +14,12 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.mutkuensert.pixabaysearchengine.data.video.VideoHitsModel
 import com.mutkuensert.pixabaysearchengine.databinding.SingleVideoItemBinding
+import com.mutkuensert.pixabaysearchengine.ui.MyDownloaderInterface
 
 private const val VIDEO_SIZE = "960x540"
-class VideosRecyclerAdapter: ListAdapter<VideoHitsModel, VideosRecyclerAdapter.ViewHolder>(VideoHitsModelListDiffCallback) {
+class VideosRecyclerAdapter(val downloader: MyDownloaderInterface): ListAdapter<VideoHitsModel, VideosRecyclerAdapter.ViewHolder>(VideoHitsModelListDiffCallback) {
 
     class ViewHolder(val binding: SingleVideoItemBinding): RecyclerView.ViewHolder(binding.root){
-
-    }
-
-    object VideoHitsModelListDiffCallback: DiffUtil.ItemCallback<VideoHitsModel>(){
-        override fun areItemsTheSame(oldItem: VideoHitsModel, newItem: VideoHitsModel): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: VideoHitsModel, newItem: VideoHitsModel): Boolean {
-            return oldItem.pageURL == newItem.pageURL
-        }
 
     }
 
@@ -40,6 +30,8 @@ class VideosRecyclerAdapter: ListAdapter<VideoHitsModel, VideosRecyclerAdapter.V
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder.binding){
+
+            downloadButton.setOnClickListener { downloader.downloadUrl(getItem(position).videos.large.url) }
 
             val ownerText = "Owner: " + getItem(position).user
             ownerNameTextView.text = ownerText
@@ -75,6 +67,16 @@ class VideosRecyclerAdapter: ListAdapter<VideoHitsModel, VideosRecyclerAdapter.V
 
                 })
                 .into(holder.binding.imageView)
+        }
+    }
+
+    object VideoHitsModelListDiffCallback: DiffUtil.ItemCallback<VideoHitsModel>(){
+        override fun areItemsTheSame(oldItem: VideoHitsModel, newItem: VideoHitsModel): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: VideoHitsModel, newItem: VideoHitsModel): Boolean {
+            return oldItem.pageURL == newItem.pageURL
         }
     }
 }

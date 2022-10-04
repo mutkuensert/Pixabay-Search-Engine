@@ -29,6 +29,7 @@ interface RequestService {
     @GET("videos")
     suspend fun searchVideoRequest(
         @Query("key") key: String = API_KEY,
+        @Query("download") download: Int = 1,
         @Query("q") search: String,
         @Query("video_type") videoType: String = "all",
         @Query("min_width") minWidth: Int = 0,

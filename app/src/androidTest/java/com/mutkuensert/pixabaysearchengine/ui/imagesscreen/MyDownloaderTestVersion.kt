@@ -36,7 +36,7 @@ class MyDownloaderTestVersion: MyDownloaderInterface {
         }
     }
 
-    override fun createEmptyFile(imageType: String) {
+    override fun createEmptyFile(fileType: String) {
         //Nothing to do in tests.
     }
 

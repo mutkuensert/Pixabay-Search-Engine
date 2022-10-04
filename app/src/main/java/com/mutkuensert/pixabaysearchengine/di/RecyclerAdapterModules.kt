@@ -16,12 +16,12 @@ object RecyclerAdapterModules {
     @FragmentScoped
     @Provides
     fun providesImagesRecyclerAdapter(): ImagesRecyclerAdapter{
-        return ImagesRecyclerAdapter(MyDownloader())
+        return ImagesRecyclerAdapter(MyDownloader("image"))
     }
 
     @FragmentScoped
     @Provides
     fun providesVideosRecyclerAdapter(): VideosRecyclerAdapter{
-        return VideosRecyclerAdapter()
+        return VideosRecyclerAdapter(MyDownloader("video"))
     }
 }

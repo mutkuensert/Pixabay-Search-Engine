@@ -1,5 +1,8 @@
 package com.mutkuensert.pixabaysearchengine.ui.videosscreen
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,6 +13,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -17,8 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mutkuensert.pixabaysearchengine.data.video.VideoHitsModel
 import com.mutkuensert.pixabaysearchengine.data.video.VideoRequestModel
 import com.mutkuensert.pixabaysearchengine.databinding.FragmentVideosBinding
+import com.mutkuensert.pixabaysearchengine.util.CHANNEL_ID
 import com.mutkuensert.pixabaysearchengine.util.Status
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 private const val TAG = "VideosFragment"
@@ -33,6 +40,12 @@ class VideosFragment : Fragment() {
     private lateinit var loadMoreVideoRequest: VideoRequestModel
     private var oldHitsList = mutableListOf<VideoHitsModel>()
     @Inject lateinit var recyclerAdapter: VideosRecyclerAdapter
+    private lateinit var startForResult: ActivityResultLauncher<Intent>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initStartForResult()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,7 +74,19 @@ class VideosFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        recyclerAdapter.downloader.scope?.cancel()
         _binding = null
+    }
+
+    private fun initStartForResult(){
+        var uri: Uri? = null
+        startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
+            if(result.resultCode == Activity.RESULT_OK){
+                uri = result.data?.data
+                recyclerAdapter.downloader.writeToFile(requireContext(), uri, CHANNEL_ID)
+            }
+        }
+        recyclerAdapter.downloader.startForResult = startForResult
     }
 
     private fun setArrayAdapterOfTheSpinner(spinner: Spinner, array: Array<String>){

@@ -13,6 +13,6 @@ interface MyDownloaderInterface {
     var scope: CoroutineScope?
     var notificationId: Int
     fun downloadUrl(url: String)
-    fun createEmptyFile(imageType: String)
+    fun createEmptyFile(fileType: String)
     fun writeToFile(context: Context, uri: Uri?, channelId: String)
 }

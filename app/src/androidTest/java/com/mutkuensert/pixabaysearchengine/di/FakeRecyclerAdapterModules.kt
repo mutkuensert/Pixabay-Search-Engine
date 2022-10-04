@@ -1,5 +1,6 @@
 package com.mutkuensert.pixabaysearchengine.di
 
+import com.mutkuensert.pixabaysearchengine.ui.MyDownloader
 import com.mutkuensert.pixabaysearchengine.ui.imagesscreen.*
 import com.mutkuensert.pixabaysearchengine.ui.videosscreen.VideosRecyclerAdapter
 import dagger.Module
@@ -24,6 +25,6 @@ object FakeRecyclerAdapterModules {
     @FragmentScoped
     @Provides
     fun providesVideosRecyclerAdapter(): VideosRecyclerAdapter {
-        return VideosRecyclerAdapter()
+        return VideosRecyclerAdapter(MyDownloader("video"))
     }
 }
