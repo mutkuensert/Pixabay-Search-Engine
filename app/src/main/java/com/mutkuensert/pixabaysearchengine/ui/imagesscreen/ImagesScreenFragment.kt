@@ -79,6 +79,7 @@ class ImagesScreenFragment : Fragment() {
         setSpinners()
 
         loadMoreImageRequest = args.imageRequestModel
+        binding.searchEditText.editText!!.setText(args.imageRequestModel.search)
     }
 
     private fun requestDownloadProgressIndicatorNotificationPermission(){
@@ -130,7 +131,7 @@ class ImagesScreenFragment : Fragment() {
                             when(spinner){
                                 typeSpinner ->  { imageType = selectedItem }
                                 orientationSpinner -> {orientation = selectedItem}
-                                colorSpinner -> {colors = selectedItem}
+                                colorSpinner -> {colors =if (selectedItem == "None") null else selectedItem }
                                 orderSpinner -> {order = selectedItem}
                             }
                         }
@@ -158,6 +159,13 @@ class ImagesScreenFragment : Fragment() {
     }
 
     private fun setOnClickListeners(){
+
+        binding.searchEditText.setStartIconOnClickListener {
+            nextImageSearchConfiguration.search = binding.searchEditText.editText!!.text.toString()
+            oldHitsList.clear()
+            loadMoreImageRequest = nextImageSearchConfiguration.copy() //Next search's page info must not increment.
+            viewModel.requestImages(nextImageSearchConfiguration)
+        }
 
         binding.searchEditText.setEndIconOnClickListener {
             with(binding.spinnersLayout){
@@ -218,7 +226,7 @@ class ImagesScreenFragment : Fragment() {
         setArrayAdapterOfTheSpinner(binding.orderSpinner, arrayOf("popular", "latest"))
         setArrayAdapterOfTheSpinner(binding.typeSpinner, arrayOf("all", "photo", "illustration", "vector" ))
         setArrayAdapterOfTheSpinner(binding.orientationSpinner, arrayOf("all", "horizontal", "vertical" ))
-        setArrayAdapterOfTheSpinner(binding.colorSpinner, arrayOf("grayscale", "transparent", "red", "orange", "yellow", "green", "turquoise", "blue", "lilac", "pink", "white", "gray", "black", "brown" ))
+        setArrayAdapterOfTheSpinner(binding.colorSpinner, arrayOf("None", "grayscale", "transparent", "red", "orange", "yellow", "green", "turquoise", "blue", "lilac", "pink", "white", "gray", "black", "brown" ))
     }
 
     override fun onDestroy() {
