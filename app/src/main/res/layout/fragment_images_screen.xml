@@ -162,14 +162,16 @@
                     android:layout_gravity="center"
                     android:id="@+id/progressBarLoadingMore"/>
 
-                <Button
+                <ImageButton
                     android:layout_marginVertical="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/loadMoreButton"
                     android:text="Load more..."
                     android:layout_gravity="center"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    android:src="@drawable/ic_load_more"
+                    android:contentDescription="Load more button." />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
