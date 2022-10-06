@@ -1,5 +1,6 @@
 package com.mutkuensert.pixabaysearchengine.ui.videosscreen
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.bumptech.glide.request.target.Target
 import com.mutkuensert.pixabaysearchengine.data.video.VideoHitsModel
 import com.mutkuensert.pixabaysearchengine.databinding.SingleVideoItemBinding
 import com.mutkuensert.pixabaysearchengine.ui.MyDownloaderInterface
+import com.mutkuensert.pixabaysearchengine.ui.playvideoscreen.PlayVideoActivity
 
 private const val VIDEO_SIZE = "960x540"
 class VideosRecyclerAdapter(val downloader: MyDownloaderInterface): ListAdapter<VideoHitsModel, VideosRecyclerAdapter.ViewHolder>(VideoHitsModelListDiffCallback) {
@@ -32,6 +34,12 @@ class VideosRecyclerAdapter(val downloader: MyDownloaderInterface): ListAdapter<
         with(holder.binding){
 
             downloadButton.setOnClickListener { downloader.downloadUrl(getItem(position).videos.large.url) }
+
+            playButton.setOnClickListener {
+                val intent = Intent(it.context, PlayVideoActivity::class.java)
+                intent.putExtra("videoUrl", getItem(position).videos.large.url)
+                it.context.startActivity(intent)
+            }
 
             val ownerText = "Owner: " + getItem(position).user
             ownerNameTextView.text = ownerText
