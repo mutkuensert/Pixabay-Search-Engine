@@ -6,10 +6,9 @@ import com.mutkuensert.pixabaysearchengine.data.image.ImagesModel
 import com.mutkuensert.pixabaysearchengine.data.video.MainVideosModel
 import com.mutkuensert.pixabaysearchengine.data.video.VideoRequestModel
 import com.mutkuensert.pixabaysearchengine.util.Resource
-import javax.inject.Inject
 import kotlin.random.Random
 
-open class Repository @Inject constructor (private val requestService: RequestService){
+open class Repository(private val requestService: RequestService){
 
     open suspend fun requestBackgroundImage(): Resource<ImageHitsModel>{
 
