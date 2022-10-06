@@ -70,6 +70,7 @@ class VideosFragment : Fragment() {
         viewModel.requestVideos(args.videoRequestModel)
 
         loadMoreVideoRequest = args.videoRequestModel
+        binding.searchEditText.editText?.setText(args.videoRequestModel.search)
     }
 
     override fun onDestroy() {
@@ -164,6 +165,13 @@ class VideosFragment : Fragment() {
     }
 
     private fun setOnClickListeners(){
+
+        binding.searchEditText.setStartIconOnClickListener {
+            nextVideoSearchConfiguration.search = binding.searchEditText.editText!!.text.toString()
+            oldHitsList.clear()
+            loadMoreVideoRequest = nextVideoSearchConfiguration.copy()
+            viewModel.requestVideos(nextVideoSearchConfiguration)
+        }
 
         binding.searchEditText.setEndIconOnClickListener {
             with(binding.spinnersLayout){
