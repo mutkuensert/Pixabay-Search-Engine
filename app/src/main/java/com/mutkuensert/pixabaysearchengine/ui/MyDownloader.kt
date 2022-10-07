@@ -14,6 +14,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.*
+import kotlin.random.Random
 
 private const val TAG = "MyDownloader"
 class MyDownloader(private val contentType: String) : MyDownloaderInterface {
@@ -21,7 +22,7 @@ class MyDownloader(private val contentType: String) : MyDownloaderInterface {
     override var startForResult: ActivityResultLauncher<Intent>? = null //Init in its fragment.
     @Volatile override var response: Response? = null
     override var scope: CoroutineScope? = CoroutineScope(Job() + Dispatchers.IO)
-    override var notificationId: Int = 0
+    override var notificationId: Int = Random(System.nanoTime()).nextInt()
 
     override fun downloadUrl(url: String) {
         Log.i(TAG,"The Url will be downloaded: $url")
@@ -105,7 +106,7 @@ class MyDownloader(private val contentType: String) : MyDownloaderInterface {
                     builder.setContentText("Download complete")
                         .setProgress(0, 0, false)
                     notify(notificationId, builder.build())
-                    notificationId += 1
+                    notificationId = Random(System.nanoTime()).nextInt()
                 }
 
             } catch(error: IOException) {
