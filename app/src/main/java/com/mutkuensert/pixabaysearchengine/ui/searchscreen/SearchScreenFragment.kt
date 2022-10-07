@@ -45,7 +45,7 @@ class SearchScreenFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setImageOrVidepSpinner()
         setObserversAndClickListeners()
-        //viewModel.requestSearchScreenBackgroundImage()
+        viewModel.requestSearchScreenBackgroundImage()
     }
 
     override fun onDestroyView() {
