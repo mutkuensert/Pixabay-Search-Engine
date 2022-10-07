@@ -1,5 +1,6 @@
 package com.mutkuensert.pixabaysearchengine.ui
 
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -57,12 +58,18 @@ class MyDownloader(private val contentType: String) : MyDownloaderInterface {
     }
 
     override fun writeToFile(context: Context, uri: Uri?, channelId: String) {
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply { addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
         scope?.launch {
             val builder = NotificationCompat.Builder(context, channelId).apply {
                 setContentTitle("Download")
                 setContentText("Download in progress")
                 setSmallIcon(R.drawable.ic_search)
                 setPriority(NotificationCompat.PRIORITY_LOW)
+                setContentIntent(pendingIntent)
+                setAutoCancel(true)
+
             }
             var outputStream: OutputStream? = null
 
