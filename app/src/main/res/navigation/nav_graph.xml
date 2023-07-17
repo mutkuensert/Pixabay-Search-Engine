@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/searchScreenFragment"
-        android:name="com.mutkuensert.pixabaysearchengine.ui.searchscreen.SearchScreenFragment"
+        android:name="com.mutkuensert.pixabaysearchengine.feature.searchscreen.SearchScreenFragment"
         android:label="fragment_search_screen"
         tools:layout="@layout/fragment_search_screen" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/imagesScreenFragment"
-        android:name="com.mutkuensert.pixabaysearchengine.ui.imagesscreen.ImagesScreenFragment"
+        android:name="com.mutkuensert.pixabaysearchengine.feature.imagesscreen.ImagesScreenFragment"
         android:label="fragment_images_screen"
         tools:layout="@layout/fragment_images_screen" >
         <action
@@ -27,11 +27,11 @@
             app:destination="@id/searchScreenFragment" />
         <argument
             android:name="imageRequestModel"
-            app:argType="com.mutkuensert.pixabaysearchengine.data.image.ImageRequestModel" />
+            app:argType="com.mutkuensert.pixabaysearchengine.domain.ImageRequestModel" />
     </fragment>
     <fragment
         android:id="@+id/videosFragment"
-        android:name="com.mutkuensert.pixabaysearchengine.ui.videosscreen.VideosFragment"
+        android:name="com.mutkuensert.pixabaysearchengine.feature.videosscreen.VideosFragment"
         android:label="fragment_videos"
         tools:layout="@layout/fragment_videos" >
         <action
@@ -39,6 +39,6 @@
             app:destination="@id/searchScreenFragment" />
         <argument
             android:name="videoRequestModel"
-            app:argType="com.mutkuensert.pixabaysearchengine.data.video.VideoRequestModel" />
+            app:argType="com.mutkuensert.pixabaysearchengine.domain.VideoRequestModel" />
     </fragment>
 </navigation>

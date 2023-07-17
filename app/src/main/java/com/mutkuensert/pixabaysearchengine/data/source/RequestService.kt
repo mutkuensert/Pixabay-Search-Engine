@@ -1,9 +1,9 @@
 package com.mutkuensert.pixabaysearchengine.data.source
 
-import com.mutkuensert.pixabaysearchengine.data.image.ImagesModel
-import com.mutkuensert.pixabaysearchengine.data.video.MainVideosModel
+import com.mutkuensert.pixabaysearchengine.data.model.image.ImagesModel
+import com.mutkuensert.pixabaysearchengine.data.model.video.MainVideosModel
+import com.mutkuensert.pixabaysearchengine.util.API_KEY
 import com.mutkuensert.pixabaysearchengine.util.BASE_URL
-import com.mutkuensert.pixabaysearcher.util.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -17,3 +17,4 @@ ApiKey.kt
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/kotlinc.xml
