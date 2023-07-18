@@ -5,9 +5,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.mutkuensert.pixabaysearchengine.data.model.image.ImageHitsModel
-import com.mutkuensert.pixabaysearchengine.data.model.video.MainVideosModel
+import com.mutkuensert.pixabaysearchengine.data.model.video.VideoHitsModel
 import com.mutkuensert.pixabaysearchengine.data.service.RequestService
-import com.mutkuensert.pixabaysearchengine.data.source.ImagePagingSource
+import com.mutkuensert.pixabaysearchengine.data.source.ImagesPagingSource
+import com.mutkuensert.pixabaysearchengine.data.source.VideosPagingSource
 import com.mutkuensert.pixabaysearchengine.domain.ImageRequestModel
 import com.mutkuensert.pixabaysearchengine.domain.Repository
 import com.mutkuensert.pixabaysearchengine.domain.VideoRequestModel
@@ -46,7 +47,7 @@ class RepositoryImpl @Inject constructor(
         return Pager(
             PagingConfig(pageSize = imageRequestModel.perPage)
         ) {
-            ImagePagingSource(requestImages = {
+            ImagesPagingSource(requestImages = {
                 requestService.searchImageRequest(
                     search = imageRequestModel.search,
                     imageType = imageRequestModel.imageType,
@@ -64,24 +65,23 @@ class RepositoryImpl @Inject constructor(
         }.flow.cachedIn(appScope)
     }
 
-    override suspend fun requestVideos(videoRequestModel: VideoRequestModel): Resource<MainVideosModel> {
-        videoRequestModel.also {
-            val response = requestService.searchVideoRequest(
-                search = it.search,
-                videoType = it.videoType,
-                minWidth = it.minWidth,
-                minHeight = it.minHeight,
-                editorsChoice = it.editorsChoice,
-                safeSearch = it.safeSearch,
-                order = it.order,
-                page = it.page,
-                perPage = it.perPage
-            )
-            if (response.isSuccessful) {
-                return Resource.success(response.body())
-            }
-        }
-
-        return Resource.error("Error.", null)
+    override suspend fun requestVideos(videoRequestModel: VideoRequestModel): Flow<PagingData<VideoHitsModel>> {
+        return Pager(
+            PagingConfig(pageSize = videoRequestModel.perPage)
+        ) {
+            VideosPagingSource(requestVideos = {
+                requestService.searchVideoRequest(
+                    search = videoRequestModel.search,
+                    videoType = videoRequestModel.videoType,
+                    minWidth = videoRequestModel.minWidth,
+                    minHeight = videoRequestModel.minHeight,
+                    editorsChoice = videoRequestModel.editorsChoice,
+                    safeSearch = videoRequestModel.safeSearch,
+                    order = videoRequestModel.order,
+                    page = it,
+                    perPage = videoRequestModel.perPage
+                )
+            })
+        }.flow.cachedIn(appScope)
     }
 }

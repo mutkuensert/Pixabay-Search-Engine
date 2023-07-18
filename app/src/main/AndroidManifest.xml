@@ -18,7 +18,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="34">
         <activity
-            android:name=".feature.playvideoscreen.PlayVideoActivity"
+            android:name=".feature.playvideo.PlayVideoActivity"
             android:exported="false">
         </activity>
         <activity

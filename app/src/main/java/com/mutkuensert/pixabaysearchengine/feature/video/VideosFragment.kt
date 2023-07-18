@@ -1,28 +1,28 @@
-package com.mutkuensert.pixabaysearchengine.feature.videosscreen
+package com.mutkuensert.pixabaysearchengine.feature.video
 
 import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mutkuensert.pixabaysearchengine.data.model.video.VideoHitsModel
 import com.mutkuensert.pixabaysearchengine.databinding.FragmentVideosBinding
 import com.mutkuensert.pixabaysearchengine.domain.VideoRequestModel
 import com.mutkuensert.pixabaysearchengine.util.CHANNEL_ID
-import com.mutkuensert.pixabaysearchengine.util.Status
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 private const val TAG = "VideosFragment"
 
@@ -33,8 +33,6 @@ class VideosFragment : Fragment() {
     private val args: VideosFragmentArgs by navArgs()
     private val nextVideoSearchConfiguration = VideoRequestModel()
     private val viewModel: VideosFragmentViewModel by viewModels()
-    private lateinit var loadMoreVideoRequest: VideoRequestModel
-    private var oldHitsList = mutableListOf<VideoHitsModel>()
     private lateinit var recyclerAdapter: VideosRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,14 +56,11 @@ class VideosFragment : Fragment() {
         binding.recyclerView.adapter = recyclerAdapter
 
         setOnClickListeners()
-
         setSpinners()
-
         setObservers()
 
         viewModel.requestVideos(args.videoRequestModel)
 
-        loadMoreVideoRequest = args.videoRequestModel
         binding.searchEditText.editText?.setText(args.videoRequestModel.search)
     }
 
@@ -125,7 +120,6 @@ class VideosFragment : Fragment() {
                                 nextVideoSearchConfiguration.order = order
                             }
                         }
-
                     }
                 }
             }
@@ -133,53 +127,23 @@ class VideosFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.data.observe(viewLifecycleOwner) { resource ->
-            when (resource.status) {
-                Status.STANDBY -> {}
-                Status.LOADING -> {
-                    binding.progressBarLoadingMore.visibility = View.VISIBLE
-                }
-
-                Status.SUCCESS -> {
-                    binding.progressBarLoadingMore.visibility = View.GONE
-                    binding.recyclerView.visibility = View.VISIBLE
-                    resource.data?.let { videosModel ->
-                        Log.i(TAG, videosModel.toString())
-                        videosModel.hits?.let {
-                            if (it.isEmpty()) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "The end of the search results.",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            } else {
-                                Log.d(TAG, it.toString())
-                                recyclerAdapter.submitList(oldHitsList + it)
-                                oldHitsList += it
-                                binding.loadMoreButton.visibility = View.VISIBLE
-                            }
-
-                        }
-                    }
-                }
-
-                Status.ERROR -> {
-                    Toast.makeText(requireContext(), "Error.", Toast.LENGTH_LONG).show()
-                    VideosFragmentDirections.actionVideosFragmentToSearchScreenFragment().also {
-                        findNavController().navigate(it)
-                    }
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.data.collectLatest {
+                recyclerAdapter.submitData(it)
             }
         }
 
-
+        viewLifecycleOwner.lifecycleScope.launch {
+            recyclerAdapter.loadStateFlow.collectLatest { loadState ->
+                binding.progressBarLoadingMore.isVisible = loadState.append is LoadState.Loading
+                binding.progressBarLoadingMore.isVisible = loadState.refresh is LoadState.Loading
+            }
+        }
     }
 
     private fun setOnClickListeners() {
         binding.searchEditText.setStartIconOnClickListener {
             nextVideoSearchConfiguration.search = binding.searchEditText.editText!!.text.toString()
-            oldHitsList.clear()
-            loadMoreVideoRequest = nextVideoSearchConfiguration.copy()
             viewModel.requestVideos(nextVideoSearchConfiguration)
         }
 
@@ -191,13 +155,6 @@ class VideosFragment : Fragment() {
                     View.VISIBLE
                 }
             }
-        }
-
-        binding.loadMoreButton.setOnClickListener {
-            it.visibility = View.GONE
-            binding.progressBarLoadingMore.visibility = View.VISIBLE
-            loadMoreVideoRequest.page += 1
-            viewModel.requestVideos(loadMoreVideoRequest)
         }
     }
 

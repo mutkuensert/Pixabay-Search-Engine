@@ -6,7 +6,7 @@ import com.mutkuensert.pixabaysearchengine.data.model.image.ImageHitsModel
 import com.mutkuensert.pixabaysearchengine.data.model.image.ImagesModel
 import retrofit2.Response
 
-class ImagePagingSource(private val requestImages: suspend (page: Int) -> Response<ImagesModel>) :
+class ImagesPagingSource(private val requestImages: suspend (page: Int) -> Response<ImagesModel>) :
     PagingSource<Int, ImageHitsModel>() {
     override fun getRefreshKey(state: PagingState<Int, ImageHitsModel>): Int? {
         return state.anchorPosition?.let { anchorPosition ->

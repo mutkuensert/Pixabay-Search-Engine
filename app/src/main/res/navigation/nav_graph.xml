@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/searchScreenFragment"
-        android:name="com.mutkuensert.pixabaysearchengine.feature.searchscreen.SearchScreenFragment"
+        android:name="com.mutkuensert.pixabaysearchengine.feature.search.SearchFragment"
         android:label="fragment_search_screen"
-        tools:layout="@layout/fragment_search_screen" >
+        tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_searchScreenFragment_to_imagesScreenFragment"
             app:destination="@id/imagesScreenFragment" />
@@ -19,9 +19,9 @@
     </fragment>
     <fragment
         android:id="@+id/imagesScreenFragment"
-        android:name="com.mutkuensert.pixabaysearchengine.feature.imagesscreen.ImagesScreenFragment"
+        android:name="com.mutkuensert.pixabaysearchengine.feature.image.ImagesFragment"
         android:label="fragment_images_screen"
-        tools:layout="@layout/fragment_images_screen" >
+        tools:layout="@layout/fragment_images" >
         <action
             android:id="@+id/action_imagesScreenFragment_to_searchScreenFragment"
             app:destination="@id/searchScreenFragment" />
@@ -31,7 +31,7 @@
     </fragment>
     <fragment
         android:id="@+id/videosFragment"
-        android:name="com.mutkuensert.pixabaysearchengine.feature.videosscreen.VideosFragment"
+        android:name="com.mutkuensert.pixabaysearchengine.feature.video.VideosFragment"
         android:label="fragment_videos"
         tools:layout="@layout/fragment_videos" >
         <action

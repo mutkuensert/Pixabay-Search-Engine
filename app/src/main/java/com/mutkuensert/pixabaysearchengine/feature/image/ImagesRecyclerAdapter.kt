@@ -1,4 +1,4 @@
-package com.mutkuensert.pixabaysearchengine.feature.imagesscreen
+package com.mutkuensert.pixabaysearchengine.feature.image
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater

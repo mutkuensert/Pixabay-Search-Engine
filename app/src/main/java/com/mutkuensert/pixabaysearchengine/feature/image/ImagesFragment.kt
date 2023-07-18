@@ -1,4 +1,4 @@
-package com.mutkuensert.pixabaysearchengine.feature.imagesscreen
+package com.mutkuensert.pixabaysearchengine.feature.image
 
 import android.Manifest
 import android.app.Activity
@@ -20,7 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mutkuensert.pixabaysearchengine.databinding.FragmentImagesScreenBinding
+import com.mutkuensert.pixabaysearchengine.databinding.FragmentImagesBinding
 import com.mutkuensert.pixabaysearchengine.domain.ImageRequestModel
 import com.mutkuensert.pixabaysearchengine.util.CHANNEL_ID
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,11 +30,11 @@ import kotlinx.coroutines.launch
 private const val TAG = "ImagesScreenFragment"
 
 @AndroidEntryPoint
-class ImagesScreenFragment : Fragment() {
-    private var _binding: FragmentImagesScreenBinding? = null
+class ImagesFragment : Fragment() {
+    private var _binding: FragmentImagesBinding? = null
     private val binding get() = _binding!!
-    private val args: ImagesScreenFragmentArgs by navArgs()
-    private val viewModel: ImagesScreenViewModel by viewModels()
+    private val args: ImagesFragmentArgs by navArgs()
+    private val viewModel: ImagesFragmentViewModel by viewModels()
     private lateinit var recyclerAdapter: ImagesRecyclerAdapter
     private var nextImageSearchConfiguration = ImageRequestModel()
 
@@ -62,7 +62,7 @@ class ImagesScreenFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentImagesScreenBinding.inflate(inflater, container, false)
+        _binding = FragmentImagesBinding.inflate(inflater, container, false)
         return binding.root
     }
 

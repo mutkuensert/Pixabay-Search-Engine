@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".feature.videosscreen.VideosFragment">
+    tools:context=".feature.video.VideosFragment">
 
     <!-- https://guides.codepath.com/android/handling-scrolls-with-coordinatorlayout -->
     <com.google.android.material.appbar.AppBarLayout
@@ -91,25 +91,18 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:visibility="gone" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
             <ProgressBar
                 android:id="@+id/progressBarLoadingMore"
@@ -118,19 +111,7 @@
                 android:layout_gravity="center"
                 android:layout_marginVertical="20dp"
                 android:visibility="gone" />
-
-            <ImageButton
-                android:id="@+id/loadMoreButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginVertical="20dp"
-                android:contentDescription="Load more button."
-                android:src="@drawable/ic_load_more"
-                android:text="Load more..."
-                android:visibility="gone" />
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

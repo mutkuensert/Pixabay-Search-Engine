@@ -1,4 +1,4 @@
-package com.mutkuensert.pixabaysearchengine.feature.imagesscreen
+package com.mutkuensert.pixabaysearchengine.feature.image
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class ImagesScreenViewModel @Inject constructor(
+class ImagesFragmentViewModel @Inject constructor(
     private val repository: Repository,
     private val downloader: Downloader,
 ) : ViewModel() {

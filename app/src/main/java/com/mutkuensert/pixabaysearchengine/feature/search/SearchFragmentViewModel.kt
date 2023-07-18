@@ -1,4 +1,4 @@
-package com.mutkuensert.pixabaysearchengine.feature.searchscreen
+package com.mutkuensert.pixabaysearchengine.feature.search
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class SearchScreenFragmentViewModel @Inject constructor(private val repositoryImpl: RepositoryImpl) :
+class SearchFragmentViewModel @Inject constructor(private val repositoryImpl: RepositoryImpl) :
     ViewModel() {
     val data = MutableLiveData<Resource<ImagesModel>>(Resource.standby(null))
     val backgroundImageData = MutableLiveData<Resource<ImageHitsModel>>(Resource.standby(null))

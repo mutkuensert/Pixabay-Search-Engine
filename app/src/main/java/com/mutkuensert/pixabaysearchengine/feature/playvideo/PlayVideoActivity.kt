@@ -1,4 +1,4 @@
-package com.mutkuensert.pixabaysearchengine.feature.playvideoscreen
+package com.mutkuensert.pixabaysearchengine.feature.playvideo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
