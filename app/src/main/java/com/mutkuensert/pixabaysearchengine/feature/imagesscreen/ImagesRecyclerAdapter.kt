@@ -4,8 +4,8 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -15,8 +15,10 @@ import com.bumptech.glide.request.target.Target
 import com.mutkuensert.pixabaysearchengine.data.model.image.ImageHitsModel
 import com.mutkuensert.pixabaysearchengine.databinding.SingleImageItemBinding
 
-open class ImagesRecyclerAdapter(private val downloadUrl: (String) -> Unit) :
-    ListAdapter<ImageHitsModel, ImagesRecyclerAdapter.ViewHolder>(ImageHitsModelListDiffCallback) {
+class ImagesRecyclerAdapter(private val downloadUrl: (String) -> Unit) :
+    PagingDataAdapter<ImageHitsModel, ImagesRecyclerAdapter.ViewHolder>(
+        ImageHitsModelListDiffCallback
+    ) {
     class ViewHolder(val binding: SingleImageItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -35,14 +37,14 @@ open class ImagesRecyclerAdapter(private val downloadUrl: (String) -> Unit) :
                 }
             }
 
-            downloadButton.setOnClickListener { downloadUrl(getItem(position).largeImageURL!!) }
+            downloadButton.setOnClickListener { downloadUrl(getItem(position)?.largeImageURL!!) }
 
-            val ownerText = "Owner: " + getItem(position).user
+            val ownerText = "Owner: " + getItem(position)?.user
             ownerNameTextView.text = ownerText
 
             Glide
                 .with(imageView.context)
-                .load(getItem(position).largeImageURL)
+                .load(getItem(position)?.largeImageURL)
                 .listener(object :
                     RequestListener<Drawable> { //https://stackoverflow.com/a/54130621
                     override fun onLoadFailed(
@@ -69,7 +71,6 @@ open class ImagesRecyclerAdapter(private val downloadUrl: (String) -> Unit) :
                 })
                 .into(holder.binding.imageView)
         }
-
     }
 
     object ImageHitsModelListDiffCallback : DiffUtil.ItemCallback<ImageHitsModel>() {
@@ -78,9 +79,8 @@ open class ImagesRecyclerAdapter(private val downloadUrl: (String) -> Unit) :
         }
 
         override fun areContentsTheSame(oldItem: ImageHitsModel, newItem: ImageHitsModel): Boolean {
-            return oldItem.largeImageURL == newItem.largeImageURL
+            return oldItem == newItem
         }
     }
-
 }
 

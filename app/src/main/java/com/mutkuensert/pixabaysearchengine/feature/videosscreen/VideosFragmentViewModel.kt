@@ -9,7 +9,6 @@ import com.mutkuensert.pixabaysearchengine.data.model.video.MainVideosModel
 import com.mutkuensert.pixabaysearchengine.domain.Repository
 import com.mutkuensert.pixabaysearchengine.domain.VideoRequestModel
 import com.mutkuensert.pixabaysearchengine.libraries.downloader.Downloader
-import com.mutkuensert.pixabaysearchengine.libraries.downloader.MimeDataType
 import com.mutkuensert.pixabaysearchengine.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -28,8 +27,6 @@ class VideosFragmentViewModel @Inject constructor(
         downloader.setFileFormatExtractor {
             it.substringAfterLast(".").substringBefore("?")
         }
-
-        downloader.setMimeDataType(MimeDataType.VIDEO)
     }
 
     fun downloadUrl(url: String) {

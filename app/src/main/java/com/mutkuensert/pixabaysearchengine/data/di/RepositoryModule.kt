@@ -1,6 +1,6 @@
 package com.mutkuensert.pixabaysearchengine.data.di
 
-import com.mutkuensert.pixabaysearchengine.data.source.RepositoryImpl
+import com.mutkuensert.pixabaysearchengine.data.model.repository.RepositoryImpl
 import com.mutkuensert.pixabaysearchengine.domain.Repository
 import dagger.Binds
 import dagger.Module

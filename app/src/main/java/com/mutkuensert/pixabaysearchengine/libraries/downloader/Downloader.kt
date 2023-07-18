@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.webkit.MimeTypeMap
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -27,8 +28,6 @@ private const val TAG = "Downloader"
  * @property initActivityResultLauncher Initialize activityResultLauncher
  * in a Fragment or Activity.
  *
- * @property setMimeDataType Set mime data type .
- *
  * @property setFileFormatExtractor Set if the file format isn't the part after the last dot in the url.
  *
  * @property setFileFormat Set the file format if it is certain.
@@ -36,10 +35,9 @@ private const val TAG = "Downloader"
 class Downloader(private val scope: AppScope) {
     private var fileFormat: String? = null
     private var fileFormatExtractor: (url: String) -> String = { it.substringAfterLast(".") }
-    private var mimeDataType: MimeDataType? = null
     private var startForResult: ActivityResultLauncher<Intent>? = null
     private var notificationId: Int = Random(System.nanoTime()).nextInt()
-    var response: Response? = null
+    private var response: Response? = null
 
     fun downloadUrl(url: String) {
         Log.i(TAG, "$url is going to be downloaded.")
@@ -61,17 +59,10 @@ class Downloader(private val scope: AppScope) {
     }
 
     private fun createEmptyFileIntentAndStartLauncher(format: String) {
-        val subtype =
-            if (format == "jpg") "jpeg" else format //There is no jpg in mime types: https://android.googlesource.com/platform/external/mime-support/+/9817b71a54a2ee8b691c1dfa937c0f9b16b3473c/mime.types
-
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
 
-            type = if (mimeDataType != null) {
-                "${mimeDataType!!.name}/$subtype"
-            } else {
-                subtype
-            }
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(format)
 
             putExtra(Intent.EXTRA_TITLE, "file")
         }
@@ -108,28 +99,29 @@ class Downloader(private val scope: AppScope) {
                     builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false)
                     notify(notificationId, builder.build())
 
-                    context.contentResolver.openFileDescriptor(uri!!, "wt")?.use {
-                        outputStream = FileOutputStream(it.fileDescriptor)
+                    context.contentResolver.openFileDescriptor(uri!!, "wt")
+                        ?.use { parcelFileDescriptor ->
+                            outputStream = FileOutputStream(parcelFileDescriptor.fileDescriptor)
 
-                        val buff = ByteArray(1024)
-                        var read: Int
-                        var bytesCopied: Long = 0
-                        val stream = response!!.body!!.byteStream()
-                        val contentLength = response!!.body!!.contentLength()
-                        var previousTimeMillis = System.currentTimeMillis()
+                            val buff = ByteArray(1024)
+                            var read: Int
+                            var bytesCopied: Long = 0
+                            val stream = response!!.body!!.byteStream()
+                            val contentLength = response!!.body!!.contentLength()
+                            var previousTimeMillis = System.currentTimeMillis()
 
-                        while (stream.read(buff, 0, buff.size).also { read = it } > -1) {
-                            outputStream!!.write(buff, 0, read)
-                            bytesCopied += read
-                            val progressCurrent = ((bytesCopied * 100) / contentLength).toInt()
+                            while (stream.read(buff, 0, buff.size).also { read = it } > -1) {
+                                outputStream!!.write(buff, 0, read)
+                                bytesCopied += read
+                                val progressCurrent = ((bytesCopied * 100) / contentLength).toInt()
 
-                            if ((System.currentTimeMillis() - previousTimeMillis) > 1000) {
-                                builder.setProgress(PROGRESS_MAX, progressCurrent, false)
-                                notify(notificationId, builder.build())
-                                previousTimeMillis = System.currentTimeMillis()
+                                if ((System.currentTimeMillis() - previousTimeMillis) > 1000) {
+                                    builder.setProgress(PROGRESS_MAX, progressCurrent, false)
+                                    notify(notificationId, builder.build())
+                                    previousTimeMillis = System.currentTimeMillis()
+                                }
                             }
                         }
-                    }
 
                     builder.setContentText("Download complete")
                         .setProgress(0, 0, false)
@@ -161,11 +153,10 @@ class Downloader(private val scope: AppScope) {
         fileFormat = type
     }
 
+    /**
+     * Default is url.substringAfterLast(".")
+     */
     fun setFileFormatExtractor(extractor: (url: String) -> String) {
         fileFormatExtractor = extractor
-    }
-
-    fun setMimeDataType(type: MimeDataType) {
-        mimeDataType = type
     }
 }

@@ -5,21 +5,27 @@ import android.app.Activity
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.*
-import android.widget.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mutkuensert.pixabaysearchengine.data.model.image.ImageHitsModel
-import com.mutkuensert.pixabaysearchengine.domain.ImageRequestModel
 import com.mutkuensert.pixabaysearchengine.databinding.FragmentImagesScreenBinding
+import com.mutkuensert.pixabaysearchengine.domain.ImageRequestModel
 import com.mutkuensert.pixabaysearchengine.util.CHANNEL_ID
-import com.mutkuensert.pixabaysearchengine.util.Status
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 private const val TAG = "ImagesScreenFragment"
 
@@ -29,11 +35,8 @@ class ImagesScreenFragment : Fragment() {
     private val binding get() = _binding!!
     private val args: ImagesScreenFragmentArgs by navArgs()
     private val viewModel: ImagesScreenViewModel by viewModels()
-
     private lateinit var recyclerAdapter: ImagesRecyclerAdapter
     private var nextImageSearchConfiguration = ImageRequestModel()
-    private var oldHitsList = mutableListOf<ImageHitsModel>()
-    private lateinit var loadMoreImageRequest: ImageRequestModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,17 +70,16 @@ class ImagesScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setOnClickListeners()
-        setObservers()
         requestDownloadProgressIndicatorNotificationPermission()
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
         binding.recyclerView.adapter = recyclerAdapter
+        setObservers()
 
         viewModel.requestImages(args.imageRequestModel)
 
         setSpinners()
 
-        loadMoreImageRequest = args.imageRequestModel
         binding.searchEditText.editText!!.setText(args.imageRequestModel.search)
     }
 
@@ -170,7 +172,6 @@ class ImagesScreenFragment : Fragment() {
                                 nextImageSearchConfiguration.order = order
                             }
                         }
-
                     }
                 }
             }
@@ -182,9 +183,6 @@ class ImagesScreenFragment : Fragment() {
     private fun setOnClickListeners() {
         binding.searchEditText.setStartIconOnClickListener {
             nextImageSearchConfiguration.search = binding.searchEditText.editText!!.text.toString()
-            oldHitsList.clear()
-            loadMoreImageRequest =
-                nextImageSearchConfiguration.copy() //Next search's page info must not increment.
             viewModel.requestImages(nextImageSearchConfiguration)
         }
 
@@ -197,59 +195,21 @@ class ImagesScreenFragment : Fragment() {
                 }
             }
         }
-
-        binding.loadMoreButton.setOnClickListener {
-            it.visibility = View.GONE
-            binding.progressBarLoadingMore.visibility = View.VISIBLE
-            loadMoreImageRequest.page += 1
-            viewModel.requestImages(loadMoreImageRequest)
-        }
     }
 
     private fun setObservers() {
-        viewModel.data.observe(viewLifecycleOwner) { resource ->
-            when (resource.status) {
-                Status.STANDBY -> {}
-
-                Status.LOADING -> {
-                    binding.progressBarLoadingMore.visibility = View.VISIBLE
-                }
-
-                Status.SUCCESS -> {
-                    binding.progressBarLoadingMore.visibility = View.GONE
-                    binding.recyclerView.visibility = View.VISIBLE
-
-                    resource.data?.let { imagesModel ->
-                        Log.i(TAG, "$imagesModel")
-
-                        imagesModel.hits?.let {
-                            if (it.isEmpty()) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "The end of the search results.",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            } else {
-                                recyclerAdapter.submitList(oldHitsList + it)
-                                oldHitsList += it
-                                binding.loadMoreButton.visibility = View.VISIBLE
-                            }
-                        }
-                    }
-                }
-
-                Status.ERROR -> {
-                    Toast.makeText(requireContext(), "Error.", Toast.LENGTH_LONG).show()
-
-                    ImagesScreenFragmentDirections.actionImagesScreenFragmentToSearchScreenFragment()
-                        .also {
-                            findNavController().navigate(it)
-                        }
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.data.collectLatest { pagingData ->
+                recyclerAdapter.submitData(pagingData)
             }
         }
 
-
+        viewLifecycleOwner.lifecycleScope.launch {
+            recyclerAdapter.loadStateFlow.collectLatest { loadState ->
+                binding.progressBarLoadingMore.isVisible = loadState.append is LoadState.Loading
+                binding.progressBarLoadingMore.isVisible = loadState.refresh is LoadState.Loading
+            }
+        }
     }
 
     private fun setSpinners() {

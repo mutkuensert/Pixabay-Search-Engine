@@ -1,4 +1,4 @@
-package com.mutkuensert.pixabaysearchengine.data.source
+package com.mutkuensert.pixabaysearchengine.data.service
 
 import com.mutkuensert.pixabaysearchengine.data.model.image.ImagesModel
 import com.mutkuensert.pixabaysearchengine.data.model.video.MainVideosModel

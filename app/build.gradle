@@ -67,9 +67,6 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
-
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
 
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
@@ -90,13 +87,18 @@ dependencies {
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
-    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    implementation "com.github.bumptech.glide:glide:$glide_version"
 
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
     implementation 'com.google.android.exoplayer:exoplayer:2.19.0'
 
     implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
+
+    implementation "androidx.paging:paging-runtime:$paging_version"
+
+    debugImplementation "com.github.chuckerteam.chucker:library:$chucker_version"
+    releaseImplementation "com.github.chuckerteam.chucker:library-no-op:$chucker_version"
 }
 kapt {
     correctErrorTypes true

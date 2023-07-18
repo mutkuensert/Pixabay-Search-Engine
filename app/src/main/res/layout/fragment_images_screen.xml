@@ -133,26 +133,20 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:id="@+id/nestedScrollView"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 >
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_marginTop="10dp"
-                    android:id="@+id/recyclerView"/>
+                    android:id="@+id/recyclerView"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
                 <ProgressBar
                     android:layout_width="40dp"
@@ -161,19 +155,7 @@
                     android:visibility="gone"
                     android:layout_gravity="center"
                     android:id="@+id/progressBarLoadingMore"/>
-
-                <ImageButton
-                    android:layout_marginVertical="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/loadMoreButton"
-                    android:text="Load more..."
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:src="@drawable/ic_load_more"
-                    android:contentDescription="Load more button." />
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
 
 
 

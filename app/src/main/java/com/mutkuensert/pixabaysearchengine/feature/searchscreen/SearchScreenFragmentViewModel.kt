@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mutkuensert.pixabaysearchengine.data.model.image.ImageHitsModel
 import com.mutkuensert.pixabaysearchengine.data.model.image.ImagesModel
-import com.mutkuensert.pixabaysearchengine.data.source.RepositoryImpl
+import com.mutkuensert.pixabaysearchengine.data.model.repository.RepositoryImpl
 import com.mutkuensert.pixabaysearchengine.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
