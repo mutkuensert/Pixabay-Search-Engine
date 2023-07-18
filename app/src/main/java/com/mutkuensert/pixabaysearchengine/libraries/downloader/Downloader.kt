@@ -99,7 +99,7 @@ open class Downloader(private val scope: CoroutineScope, private val context: Co
             val name = context.getString(R.string.channel_name)
             val descriptionText = context.getString(R.string.channel_description)
             val importance =
-                NotificationManager.IMPORTANCE_LOW // https://stackoverflow.com/a/45920861
+                NotificationManager.IMPORTANCE_LOW
             val channel = NotificationChannel(DOWNLOADER_NOTIF_CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
