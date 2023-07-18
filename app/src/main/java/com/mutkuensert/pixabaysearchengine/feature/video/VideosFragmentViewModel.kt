@@ -5,10 +5,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import com.mutkuensert.downloader.Downloader
 import com.mutkuensert.pixabaysearchengine.data.model.video.VideoHitsModel
 import com.mutkuensert.pixabaysearchengine.domain.Repository
 import com.mutkuensert.pixabaysearchengine.domain.VideoRequestModel
-import com.mutkuensert.pixabaysearchengine.libraries.downloader.Downloader
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

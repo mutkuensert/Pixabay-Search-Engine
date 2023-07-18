@@ -1,6 +1,7 @@
 package com.mutkuensert.pixabaysearchengine.libraries.downloader
 
 import android.content.Context
+import com.mutkuensert.downloader.Downloader
 import com.mutkuensert.pixabaysearchengine.libraries.appscope.AppScope
 import dagger.Module
 import dagger.Provides
