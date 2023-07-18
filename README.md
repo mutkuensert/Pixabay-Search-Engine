@@ -15,16 +15,13 @@ https://user-images.githubusercontent.com/97624869/194602879-256f865b-a2c4-421f-
 
 
 ## Tech
-* [Coroutines](https://developer.android.com/kotlin/coroutines) - To execute asynchronous tasks
+* [Chucker](https://github.com/ChuckerTeam/chucker) - To keep track of Http requests/responses
 * [ExoPlayer](https://exoplayer.dev/) - To play videos
 * [Glide](https://github.com/bumptech/glide) - To load images in ImageViews
 * [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) - Automatized dependency injection library
-* [Hilt](https://dagger.dev/hilt/) - Hilt documentation on dagger.dev
 * [Moshi](https://github.com/square/moshi/) - JSON library
-* [Navigation Component](https://developer.android.com/guide/navigation/navigation-getting-started) - To navigate between screens.
 * [OkHttp](https://square.github.io/okhttp/) - To download files
 * [Retrofit](https://square.github.io/retrofit/) - To make HTTP requests
-* [ViewModel](https://developer.android.com/jetpack/androidx/releases/lifecycle) - Link for ViewModel dependencies.
 
 
 ## License
