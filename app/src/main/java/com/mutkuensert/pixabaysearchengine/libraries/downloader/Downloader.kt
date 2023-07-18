@@ -231,7 +231,6 @@ open class Downloader(private val scope: CoroutineScope, private val context: Co
                     }
 
                 onDownloadComplete()
-
             } catch (error: Throwable) {
                 Log.e(TAG, error.stackTraceToString())
             } finally {
