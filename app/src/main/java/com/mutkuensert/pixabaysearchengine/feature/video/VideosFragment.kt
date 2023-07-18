@@ -19,7 +19,6 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mutkuensert.pixabaysearchengine.databinding.FragmentVideosBinding
 import com.mutkuensert.pixabaysearchengine.domain.VideoRequestModel
-import com.mutkuensert.pixabaysearchengine.util.CHANNEL_ID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -76,7 +75,7 @@ class VideosFragment : Fragment() {
                 if (result.resultCode == Activity.RESULT_OK) {
                     uri = result.data?.data
 
-                    writeToFile(requireContext(), uri, CHANNEL_ID)
+                    if(uri != null) writeToFile(uri!!)
                 }
             }
         }

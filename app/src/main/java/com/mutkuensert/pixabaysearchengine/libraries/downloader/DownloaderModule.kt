@@ -1,9 +1,11 @@
 package com.mutkuensert.pixabaysearchengine.libraries.downloader
 
+import android.content.Context
 import com.mutkuensert.pixabaysearchengine.libraries.appscope.AppScope
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
 @Module
@@ -11,5 +13,7 @@ import dagger.hilt.components.SingletonComponent
 object DownloaderModule {
 
     @Provides
-    fun providesDownloader(scope: AppScope) = Downloader(scope)
+    fun providesDownloader(scope: AppScope, @ApplicationContext context: Context): Downloader {
+        return Downloader(scope = scope, context = context)
+    }
 }

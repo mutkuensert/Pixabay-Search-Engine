@@ -16,6 +16,7 @@ import com.bumptech.glide.request.target.Target
 import com.mutkuensert.pixabaysearchengine.data.model.video.VideoHitsModel
 import com.mutkuensert.pixabaysearchengine.databinding.SingleVideoItemBinding
 import com.mutkuensert.pixabaysearchengine.feature.playvideo.PlayVideoActivity
+import com.mutkuensert.pixabaysearchengine.util.VIDEO_URL
 
 private const val VIDEO_SIZE = "960x540"
 
@@ -33,13 +34,14 @@ class VideosRecyclerAdapter(private val downloadUrl: (String) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(holder.binding) {
+        if(getItem(position) == null) return
 
-            downloadButton.setOnClickListener { downloadUrl(getItem(position)?.videos?.large?.url!!) }
+        with(holder.binding) {
+            downloadButton.setOnClickListener { downloadUrl(getItem(position)!!.videos.large.url) }
 
             playButton.setOnClickListener {
                 val intent = Intent(it.context, PlayVideoActivity::class.java)
-                intent.putExtra("videoUrl", getItem(position)?.videos?.large?.url)
+                intent.putExtra("videoUrl", getItem(position)!!.videos.large.url)
                 it.context.startActivity(intent)
             }
 
@@ -48,7 +50,7 @@ class VideosRecyclerAdapter(private val downloadUrl: (String) -> Unit) :
 
 
             val videoThumbnailImageUrl =
-                "https://i.vimeocdn.com/video/${getItem(position)?.pictureID}_${VIDEO_SIZE}.jpg"
+                "$VIDEO_URL${getItem(position)!!.pictureID}_${VIDEO_SIZE}.jpg"
 
             Glide
                 .with(imageView.context)

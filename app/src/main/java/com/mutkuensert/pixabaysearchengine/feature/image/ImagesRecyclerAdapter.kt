@@ -28,6 +28,8 @@ class ImagesRecyclerAdapter(private val downloadUrl: (String) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if (getItem(position) == null) return
+
         with(holder.binding) {
             imageView.setOnClickListener {
                 imageInfos.visibility = if (imageInfos.visibility == View.GONE) {
@@ -37,14 +39,18 @@ class ImagesRecyclerAdapter(private val downloadUrl: (String) -> Unit) :
                 }
             }
 
-            downloadButton.setOnClickListener { downloadUrl(getItem(position)?.largeImageURL!!) }
+            downloadButton.setOnClickListener {
+                if (getItem(position)!!.largeImageURL != null) {
+                    downloadUrl(getItem(position)!!.largeImageURL!!)
+                }
+            }
 
-            val ownerText = "Owner: " + getItem(position)?.user
+            val ownerText = "Owner: " + getItem(position)!!.user
             ownerNameTextView.text = ownerText
 
             Glide
                 .with(imageView.context)
-                .load(getItem(position)?.largeImageURL)
+                .load(getItem(position)!!.largeImageURL)
                 .listener(object :
                     RequestListener<Drawable> { //https://stackoverflow.com/a/54130621
                     override fun onLoadFailed(
