@@ -45,7 +45,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation files('libs/Downloader.aar')
     testImplementation 'junit:junit:4.13.2'
 
     androidTestImplementation("androidx.test:core:1.5.0")
@@ -100,6 +99,8 @@ dependencies {
 
     debugImplementation "com.github.chuckerteam.chucker:library:$chucker_version"
     releaseImplementation "com.github.chuckerteam.chucker:library-no-op:$chucker_version"
+
+    implementation "com.github.mutkuensert:downloader:$downloader_version"
 }
 kapt {
     correctErrorTypes true

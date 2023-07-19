@@ -10,6 +10,7 @@ buildscript {
         paging_version = '3.1.1'
         chucker_version = '4.0.0'
         glide_version = '4.15.1'
+        downloader_version = 'v1.0.7'
     }
     dependencies {
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
