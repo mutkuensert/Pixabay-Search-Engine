@@ -16,11 +16,11 @@ https://user-images.githubusercontent.com/97624869/194602879-256f865b-a2c4-421f-
 
 ## Tech
 * [Chucker](https://github.com/ChuckerTeam/chucker) - To keep track of Http requests/responses
+* [Downloader](https://github.com/mutkuensert/Downloader) - A downloader library supported with notifications.
 * [ExoPlayer](https://exoplayer.dev/) - To play videos
 * [Glide](https://github.com/bumptech/glide) - To load images in ImageViews
 * [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) - Automatized dependency injection library
 * [Moshi](https://github.com/square/moshi/) - JSON library
-* [OkHttp](https://square.github.io/okhttp/) - To download files
 * [Retrofit](https://square.github.io/retrofit/) - To make HTTP requests
 
 
