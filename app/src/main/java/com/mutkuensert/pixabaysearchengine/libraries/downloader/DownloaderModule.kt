@@ -15,14 +15,10 @@ object DownloaderModule {
 
     @Provides
     fun providesDownloader(scope: AppScope, @ApplicationContext context: Context): Downloader {
-        val downloader = Downloader.Builder()
+        return Downloader.Builder()
             .context(context)
             .scope(scope)
             .setNotificationsActive(true)
             .build()
-
-        downloader.notificationBuilder.setAutoCancel(false)
-
-        return downloader
     }
 }
