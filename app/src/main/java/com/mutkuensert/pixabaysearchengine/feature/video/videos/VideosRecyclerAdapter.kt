@@ -1,4 +1,4 @@
-package com.mutkuensert.pixabaysearchengine.feature.video
+package com.mutkuensert.pixabaysearchengine.feature.video.videos
 
 import android.content.Intent
 import android.graphics.drawable.Drawable
@@ -15,7 +15,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.mutkuensert.pixabaysearchengine.data.model.video.VideoHitsModel
 import com.mutkuensert.pixabaysearchengine.databinding.SingleVideoItemBinding
-import com.mutkuensert.pixabaysearchengine.feature.playvideo.PlayVideoActivity
+import com.mutkuensert.pixabaysearchengine.feature.video.playvideo.PlayVideoActivity
+import com.mutkuensert.pixabaysearchengine.util.KEY_VIDEO_URL
 import com.mutkuensert.pixabaysearchengine.util.VIDEO_URL
 
 private const val VIDEO_SIZE = "960x540"
@@ -34,14 +35,14 @@ class VideosRecyclerAdapter(private val downloadUrl: (String) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(getItem(position) == null) return
+        if (getItem(position) == null) return
 
         with(holder.binding) {
             downloadButton.setOnClickListener { downloadUrl(getItem(position)!!.videos.large.url) }
 
             playButton.setOnClickListener {
                 val intent = Intent(it.context, PlayVideoActivity::class.java)
-                intent.putExtra("videoUrl", getItem(position)!!.videos.large.url)
+                intent.putExtra(KEY_VIDEO_URL, getItem(position)!!.videos.large.url)
                 it.context.startActivity(intent)
             }
 
@@ -50,7 +51,7 @@ class VideosRecyclerAdapter(private val downloadUrl: (String) -> Unit) :
 
 
             val videoThumbnailImageUrl =
-                "$VIDEO_URL${getItem(position)!!.pictureID}_${VIDEO_SIZE}.jpg"
+                "$VIDEO_URL${getItem(position)!!.pictureID}_$VIDEO_SIZE.jpg"
 
             Glide
                 .with(imageView.context)

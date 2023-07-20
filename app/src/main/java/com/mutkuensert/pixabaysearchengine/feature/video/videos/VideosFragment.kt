@@ -1,4 +1,4 @@
-package com.mutkuensert.pixabaysearchengine.feature.video
+package com.mutkuensert.pixabaysearchengine.feature.video.videos
 
 import android.app.Activity
 import android.net.Uri
@@ -75,7 +75,7 @@ class VideosFragment : Fragment() {
                 if (result.resultCode == Activity.RESULT_OK) {
                     uri = result.data?.data
 
-                    if(uri != null) writeToFile(uri!!)
+                    if (uri != null) writeToFile(uri!!)
                 }
             }
         }

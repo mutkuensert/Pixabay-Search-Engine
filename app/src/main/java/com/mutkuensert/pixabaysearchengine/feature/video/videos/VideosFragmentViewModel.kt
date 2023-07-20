@@ -1,4 +1,4 @@
-package com.mutkuensert.pixabaysearchengine.feature.video
+package com.mutkuensert.pixabaysearchengine.feature.video.videos
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher

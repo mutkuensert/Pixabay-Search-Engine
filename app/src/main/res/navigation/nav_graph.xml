@@ -31,7 +31,7 @@
     </fragment>
     <fragment
         android:id="@+id/videosFragment"
-        android:name="com.mutkuensert.pixabaysearchengine.feature.video.VideosFragment"
+        android:name="com.mutkuensert.pixabaysearchengine.feature.video.videos.VideosFragment"
         android:label="fragment_videos"
         tools:layout="@layout/fragment_videos" >
         <action
