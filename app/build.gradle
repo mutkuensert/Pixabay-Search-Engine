@@ -100,7 +100,7 @@ dependencies {
     debugImplementation "com.github.chuckerteam.chucker:library:$chucker_version"
     releaseImplementation "com.github.chuckerteam.chucker:library-no-op:$chucker_version"
 
-    implementation "com.github.mutkuensert:downloader:v2.1.0"
+    implementation "com.github.mutkuensert:downloader:v2.2.0"
     //implementation files('libs/Downloader.aar')
 }
 kapt {
